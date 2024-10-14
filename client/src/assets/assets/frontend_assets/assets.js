@@ -59,6 +59,11 @@ import tocino from '../frontend_assets/tocino.png'
 import sinigang from '../frontend_assets/sinigang.jpg'
 import bringhe from '../frontend_assets/bringhe.jpg'
 import bulanglang from '../frontend_assets/bulanglang.jpg'
+import samsung from '../frontend_assets/samsung.png'
+import realme from '../frontend_assets/realme 9 LTE.png'
+import infinix from '../frontend_assets/infinix-30i.jpg'
+import xiaomi from '../frontend_assets/xiaomi 12.png'
+import redmi from '../frontend_assets/redmi a3.png'
 
 import heroImage from "../frontend_assets/hero-image.png";
 import logo from "./logo.png";
@@ -793,63 +798,128 @@ export const products = [
     bestseller: true,
   },
   {
-        _id: aaaby,
+        _id: 'aaaby',
         name: "Sisig",
         description: "A Kapampangan dish made from chopped and grilled pig's head and liver, served sizzling with onions, calamansi, and chili.",
-        price: 280,
+        price: 150,
         image: [sisig],
-        category: 'Food',
+        category: 'Foods',
         subCategory: "Main Dish",
         sizes: ["Single", "Good for Two"],
         date: 1716668445449,
         bestseller: true
     },
     {
-        _id: aaabx,
+        _id: 'aaabx',
         name: 'Pork Tocino',
         description: 'A sweet and savory cured pork dish, often served with garlic fried rice and a fried egg, popular as a Kapampangan breakfast.',
-        price: 200,
+        price: 85,
         image: [tocino],
-        category: 'Food',
+        category: 'Foods',
         subCategory: 'Breakfast Favourites',
         sizes: ["220g", "240g", "450g", "480g"],
         date: 1716668445450,
         bestseller: false
     },
     {
-        _id: aaabw,
+        _id: 'aaabw',
         name: 'Pork Bulanglang',
         description: 'A unique sour soup made with guava, pork, and leafy vegetables, offering a distinct balance of savory and tangy flavors.',
-        price: 300,
+        price: 80,
         image: [bulanglang],
-        category: 'Food',
+        category: 'Foods',
         subCategory: 'Kapampangan Soups',
         sizes: ["Single", "Good for two"],
         date: 1716668445451,
         bestseller: false
     },
     {
-        _id: aaabv,
+        _id: 'aaabv',
         name: "Bringhe",
         description: "Kapampangan-style paella made with glutinous rice, chicken, and coconut milk, often served during special occasions.",
-        price: 100,
+        price: 60,
         image: [bringhe],
-        category: 'Food',
+        category: 'Foods',
         subCategory: 'Local',
         sizes: ["Single","Good for two"],
         date: 1716668445452,
         bestseller: true
     },
     {
-        _id: aaabu,
+        _id: 'aaabu',
         name: 'Sinigang na Bangus',
         description: 'A classic Filipino sour soup made with milkfish (bangus), tamarind broth, tomatoes, and a mix of vegetables like kangkong and radish, delivering a refreshing and tangy flavor.',
         price: 70,
         image: [sinigang],
-        category: 'Food',
+        category: 'Foods',
         subCategory: 'Main Dish',
-        sizes: [Small, Medium, Large],
+        sizes: ["Single","Good for two"],
         date: 1716668445453,
         bestseller: false
-    }
+    },
+    {
+      _id: 'ccdcc',
+      name: "Infinix Hot 30i",
+      description: "The Infinix Hot 30i is a budget smartphone featuring a 6.6-inch HD+ display, a 50MP dual-camera setup, and a 5,000mAh battery for all-day use. Powered by a MediaTek Helio chip with up to 8GB RAM, it offers smooth performance for everyday tasks at an affordable price.",
+      price: 3400,
+      image: [infinix],
+      category: "Gadgets",
+      subCategory: "Smart Phones",
+      variation: ["Black", "White", "Yellow"],
+      date: 1716668234515,
+      bestseller: true
+
+    },
+    {
+      _id: 'ccdaa',
+      name: "Realme 9 LTE",
+      description: "The Realme 9 LTE comes with a 6.4-inch Super AMOLED display, a 108MP triple-camera system, and a 5,000mAh battery with 33W fast charging. Powered by the Snapdragon 680 processor, it offers smooth performance, making it an excellent choice for users seeking a feature-packed phone at an affordable price.",
+      price: 3400,
+      image: [realme],
+      category: "Gadgets",
+      subCategory: "Smart Phones",
+      variation: ["Black", "White", "Yellow"],
+      date: 1716668234515,
+      bestseller: true
+
+    },
+    {
+      _id: 'ccdcc',
+      name: "Samsung Galaxy A34 5G",
+      description: "The Samsung Galaxy A34 features a 6.6-inch 120Hz Super AMOLED display, 48MP triple-camera, and a 5,000mAh battery with fast charging. Powered by the Dimensity 1080 chip, it delivers solid 5G performance at a great value.",
+      price: 5000,
+      image: [samsung],
+      category: "Gadgets",
+      subCategory: "Smart Phones",
+      variation: ["Black", "White", "Yellow"],
+      date: 1716668234515,
+      bestseller: false
+
+    },
+    {
+      _id: 'ccdbb',
+      name: "Xiaomi 12",
+      description: "The Xiaomi 12 is a flagship device with a 6.28-inch AMOLED display, Snapdragon 8 Gen 1 processor, and a 50MP triple-camera setup. It offers top-tier performance, fast charging, and a sleek design, ideal for power users seeking premium features.",
+      price: 4500,
+      image: [xiaomi],
+      category: "Gadgets",
+      subCategory: "Smart Phones",
+      variation: ["Black", "White", "Yellow"],
+      date: 1716668234515,
+      bestseller: true
+
+    },
+    {
+      _id: 'ccdee',
+      name: "Redmi A3",
+      description: "The Redmi A3 is an entry-level smartphone featuring a 6.52-inch HD+ display, a dual-camera setup, and a 5,000mAh battery for long-lasting use. Powered by a basic MediaTek processor, it’s designed for essential tasks at an affordable price.",
+      price: 2000,
+      image: [redmi],
+      category: "Gadgets",
+      subCategory: "Smart Phones",
+      variation: ["Black", "White", "Yellow"],
+      date: 1716668234515,
+      bestseller: true
+
+    },
 ];
