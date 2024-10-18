@@ -8,6 +8,9 @@
 a.active hr  {
     display: block;
 }
+::-webkit-scrollbar {
+    display: none;
+}
 
 @media(max-width:640px) {
     a.active{
