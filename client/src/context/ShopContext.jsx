@@ -1,15 +1,15 @@
 import { createContext, useEffect, useState } from "react";
 import { products } from "../assets/assets/frontend_assets/assets";
 import { toast } from "react-toastify";
+import {useNavigate} from 'react-router-dom'
 export const ShopContext = createContext();
-
 const ShopContextProvider = (props) => {
   const currency = "₱";
   const delivery_fee = 10;
   const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(true);
   const [cartItems, setCartItems] = useState({});
-
+  const navigate = useNavigate();
   const addToCart = async (itemId, size) => {
     let cartData = structuredClone(cartItems);
 
@@ -58,7 +58,7 @@ const ShopContextProvider = (props) => {
   const getCartAmount = () => {
     let totalAmount = 0;
     for(const items in cartItems) {
-        let itemInfo = products.find((product)=> product._id === items.id)
+        let itemInfo = products.find((product)=> product._id === items)
         for(const item in cartItems[items]) {
             try {
                 if(cartItems[items][item] > 0){
@@ -88,6 +88,7 @@ const ShopContextProvider = (props) => {
     getCartCount,
     updateQuantity,
     getCartAmount,
+    navigate
   };
 
   return (
