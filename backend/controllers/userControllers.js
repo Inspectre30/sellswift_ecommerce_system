@@ -75,7 +75,9 @@ const registerUser = async (req, res) => {
   }
 };
 //route for seller
-const sellerLogin = async (req, res) => {};
+const sellerLogin = async (req, res) => {
+  
+};
 
 export { loginUser, registerUser, sellerLogin };
 
