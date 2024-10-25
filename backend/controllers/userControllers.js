@@ -34,7 +34,7 @@ const loginUser = async (req, res) => {
 //route for register
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role="customer"} = req.body;
     //checking user already exists or not
     const exist = await userModel.findOne({ email });
     if (exist) {
@@ -62,6 +62,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      role,
     });
 
     const user = await newUser.save();
@@ -78,6 +79,7 @@ const registerUser = async (req, res) => {
 const sellerLogin = async (req, res) => {
   
 };
+///TASK: HOW TO IMPLEMENT THE AUTHENTICATION FOR LOGIN AMONG CUSTOMERS AND SELLERS 6:02:04
 
 export { loginUser, registerUser, sellerLogin };
 
