@@ -76,11 +76,25 @@ const registerUser = async (req, res) => {
   }
 };
 //route for seller
-const sellerLogin = async (req, res) => {
-  
+const adminLogin = async (req, res) => {
+  try {
+    const {email,password} = req.body 
+    
+    if(email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+      const token = jwt.sign(email+password, process.env.JWT_SECRET)
+      res.json({success:true, token})
+    }else{
+      res.json({success:false, msg: "Invalid Credentials"})
+    }
+    
+  } catch (err) {
+    console.log(err);
+    res.json({success: false, message: err.message})
+  }
 };
-///TASK: HOW TO IMPLEMENT THE AUTHENTICATION FOR LOGIN AMONG CUSTOMERS AND SELLERS 6:02:04
+///TASK: COPY THE FOLLOWING STYLES BUT CHANGE THE "ADMIN PANEL" TO "SELLER PANEL" And also pay attention on how he fetch data.
+//For example fetching based from roles: "Seller"
 
-export { loginUser, registerUser, sellerLogin };
+export { loginUser, registerUser, adminLogin};
 
 
