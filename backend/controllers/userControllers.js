@@ -8,29 +8,35 @@ const createToken = (id) => {
 };
 //Route for user login
 const loginUser = async (req, res) => {
-    try{
-        const{email, password} = req.body;
+  try {
+      const { email, password } = req.body;
+      const user = await userModel.findOne({ email });
 
-        const user = await userModel.findOne({email});
+      if (!user) {
+          return res.json({ success: false, message: "User doesn't exist" });
+      }
 
-        if(!user) {
-            return res.json({success:false, message:"User doesn't exists"})
-        }
+      const isMatch = await bcrypt.compare(password, user.password);
 
-        const isMatch = await bcrypt.compare(password, user.password); 
+      if (isMatch) {
+          const token = createToken(user._id);
 
-        if(isMatch) {
-            const token = createToken(user._id)
-            res.json({success:true, token})
-        }
-        else{
-            res.json({success: false, msg:"Invalid Password"})
-        }
-    }catch(err) {
-            console.log(err); 
-            res.json({success: false, msg: err.message})
-    }
+          if (user.role === 'customer') {
+              res.json({ success: true, role: 'customer', token });
+          } else if (user.role === 'seller') {
+              res.json({ success: true, role: 'seller', token });
+          } else {
+              res.json({ success: false, msg: "Unauthorized role" });
+          }
+      } else {
+          res.json({ success: false, msg: "Invalid password" });
+      }
+  } catch (err) {
+      console.log(err);
+      res.json({ success: false, msg: err.message });
+  }
 };
+
 //route for register
 const registerUser = async (req, res) => {
   try {
@@ -92,6 +98,9 @@ const adminLogin = async (req, res) => {
     res.json({success: false, message: err.message})
   }
 };
+
+
+
 ///TASK: COPY THE FOLLOWING STYLES BUT CHANGE THE "ADMIN PANEL" TO "SELLER PANEL" And also pay attention on how he fetch data.
 //For example fetching based from roles: "Seller"
 
