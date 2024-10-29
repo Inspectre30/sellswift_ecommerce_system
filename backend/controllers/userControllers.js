@@ -81,7 +81,7 @@ const registerUser = async (req, res) => {
     res.json({success: false, message: err.message})
   }
 };
-//route for seller
+//route for admins
 const adminLogin = async (req, res) => {
   try {
     const {email,password} = req.body 
