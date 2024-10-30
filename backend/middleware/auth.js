@@ -10,6 +10,9 @@ const authUser = async (req,res,next) => {
         req.body.userId = token_decode.id
         next();
     } catch (error) {
-        
+        console.log(error)
+        return res.json({success:false,  message: error.message})
     }
 }
+
+export default authUser;
