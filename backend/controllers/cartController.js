@@ -46,7 +46,8 @@ const getUserCart = async (req, res) => {
 
     const {userId} = req.body;
     const userData = await userModel.findById(userId)
-    let cartData =  await userCartData;
+    let cartData =  await userData.cartData
+    res.json({success:true, cartData});
 
   } catch (error) {
     console.log(error);
@@ -56,4 +57,3 @@ const getUserCart = async (req, res) => {
 
 export { addToCart, updateCart, getUserCart };
 
-//10:23:02
