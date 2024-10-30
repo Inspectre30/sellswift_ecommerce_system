@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useState } from "react";
 import { backendUrl } from "../App";
 import axios from "axios";
@@ -15,6 +15,7 @@ const Login = ({ setAuth, setRole }) => {
       });
       if (response.data.role === "seller") {
         setAuth(true);
+        setRole(response.data.role)
       } else {
         toast("Unauthorized access");
       }

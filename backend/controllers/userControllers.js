@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET);
+  return jwt.sign({ id}, process.env.JWT_SECRET);
 };
 //Route for user login
 const loginUser = async (req, res) => {
@@ -20,6 +20,7 @@ const loginUser = async (req, res) => {
 
       if (isMatch) {
           const token = createToken(user._id);
+        
 
           if (user.role === 'customer') {
               res.json({ success: true, role: 'customer', token });

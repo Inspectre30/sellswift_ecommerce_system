@@ -1,30 +1,25 @@
-import jwt from "jsonwebtoken";
-import userModel from "../models/userModel.js"; // Adjust the path as needed
+// middleware/sellerAuth.js
+// import jwt from 'jsonwebtoken';
 
-const sellerAuth = async (req, res, next) => {
-    try {
-        const { token } = req.headers;
-        if (!token) {
-            return res.json({ success: false, msg: "Not authorized. Login again!" });
-        }
+// const sellerAuth = (req, res, next) => {
+//   try {
+//     const token = req.headers.authorization?.split(' ')[1];
+//     if (!token) return res.status(403).json({ success: false, msg: 'Authorization required' });
+//     console.log("Token received:", token);
 
-        // Decode the token to get the user ID
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const userId = decoded.id;
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     console.log(decoded.role)
+  
+//     if (decoded.role !== 'seller') {
+//       return res.status(403).json({ success: false, msg: 'Seller access only' });
+//     }
 
-        // Find the user in the database
-        const user = await userModel.findById(userId);
+//     req.user = decoded;
+//     next();
+//   } catch (err) {
+//     res.status(401).json({ success: false, msg: 'Invalid token' });
+//   }
+// };
 
-        if (!user || user.role !== "seller") {
-            return res.json({ success: false, msg: "Not authorized. Access restricted to sellers only." });
-        }
-
-        // Proceed to the next middleware or route handler
-        next();
-    } catch (err) {
-        console.log(err);
-        res.json({ success: false, msg: err.message });
-    }
-};
-
-export default sellerAuth;
+// export default sellerAuth;
+//8:57:37
