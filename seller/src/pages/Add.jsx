@@ -17,7 +17,7 @@ const Add = ({role}) => {
   const [price, setPrice] = useState("")
   const [category, setCategory] = useState("Men");
   const [subCategory, setSubCategory] = useState("Topwear");
-  const [bestseller, setBestseller] = useState(false);
+  const [bestseller, setBestSeller] = useState(false);
   const [sizes, setSizes] = useState([])
 
   const onSubmitHandler = async (e) => {
@@ -48,6 +48,7 @@ const Add = ({role}) => {
         setImage2(false)
         setImage3(false)
         setImage4(false)
+        setBestSeller(false)
       }else {
         toast.error(response.data.msg)
       }
@@ -144,7 +145,7 @@ const Add = ({role}) => {
       </div>
 
       <div className='flex gap-2 mt-2'>
-        <input onChange={()=> setBestseller(prev => !prev)} checked={bestseller} type="checkbox" id="bestseller" />
+        <input onChange={()=> setBestSeller(prev => !prev)} checked={bestseller} type="checkbox" id="bestseller" />
         <label className='cursor-pointer' htmlFor="bestseller">Add to bestseller</label>
       </div>
 
