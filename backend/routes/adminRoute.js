@@ -10,4 +10,3 @@ adminRouter.get('/get-users',adminAuth,getAllUsers);
 
 export default adminRouter;
 
-//7:24:30
