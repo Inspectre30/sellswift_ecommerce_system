@@ -25,9 +25,13 @@ const placeOrder = async (req, res) => {
     res.json({ success: false, msg: error.message });
   }
 };
-const placeOrderStripe = async (req, res) => {};
+const placeOrderStripe = async (req, res) => {
+    //feature not available in country
+};
 
-const placeOrderRazorPay = async (req, res) => {};
+const placeOrderRazorPay = async (req, res) => {
+    //feature not available in country
+};
 //All Orders data for Seller Panel
 const allOrders = async (req, res) => {
   try {
@@ -49,7 +53,16 @@ const userOrders = async (req, res) => {
   }
 };
 //update order status from seller panel
-const updateStatus = async (req, res) => {};
+const updateStatus = async (req, res) => {
+    try {
+        const {orderId, status} = req.body 
+        await orderModel.findByIdAndUpdate(orderId,{status})
+        res.json({ success: true, msg:"Status Updated" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, msg: error.message });
+    }
+};
 
 export {
   updateStatus,
