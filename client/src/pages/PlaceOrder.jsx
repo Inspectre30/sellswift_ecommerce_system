@@ -3,10 +3,12 @@ import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 import { assets } from "../assets/assets/frontend_assets/assets";
 import { ShopContext } from "../context/ShopContext";
-
+import axios from "axios";
+import {toast} from 'react-toastify'
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
-  const { navigate } = useContext(ShopContext);
+  const { navigate,backendUrl,token,cartItems, setCartItems,getCartAmount, delivery_fee,products } = useContext(ShopContext);
+
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -30,6 +32,45 @@ const PlaceOrder = () => {
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    try {
+      let orderItems = []
+      for(const items in cartItems) {
+        for(const item in cartItems[items]) {
+          if(cartItems[items][item] > 0) {
+              const itemInfo = structuredClone(products.find(product => product._id === items))
+              if(itemInfo) {
+                itemInfo.size = item
+                itemInfo.quantity = cartItems[items][item]
+                orderItems.push(itemInfo)
+              }
+          }
+        }
+      }
+     let orderData = {
+      address: formData,
+      items:orderItems,
+      amount:getCartAmount()+delivery_fee,
+     }
+     switch(method) {
+      //API CALLS FOR COD
+      case 'cod':
+        const response = await axios.post(backendUrl+ '/api/order/place',orderData,{headers:{token}});
+        if(response.data.success) {
+          setCartItems({})
+          navigate('/orders')
+        }else{
+          toast.error(response.data.msg)
+        }
+        break;
+
+      default:
+        break;
+     }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+      
+    }
   }
   return (
     <form onSubmit={onSubmitHandler} className="flex flex-col sm:flex-row justify-between gap-4 pt-5 sm:pt-14 min-h-[80vh] border-t">
@@ -159,7 +200,7 @@ const PlaceOrder = () => {
         <div className="w-full text-end mt-8">
           <button
           type="submit"
-            onClick={() => navigate("/orders")}
+           
             className="bg-black text-white px-16 py-3 text-sm"
           >
             PLACE ORDER
