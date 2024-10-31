@@ -18,7 +18,7 @@ const Orders = ({ role }) => {
         { headers: { role } }
       );
       if (response.data.success) {
-        setOrders(response.data.orders);
+        setOrders(response.data.orders.reverse());
       } else {
         toast.error(response.data.msg);
       }

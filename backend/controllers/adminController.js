@@ -26,3 +26,4 @@ export const removeUser = async (req, res) => {
     res.json({ success: false, msg: error.message });
   }
 };
+
