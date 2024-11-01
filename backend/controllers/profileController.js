@@ -49,4 +49,3 @@ export const updateUserProfile = async (req, res) => {
   }
 };
 
-///check this if this really works

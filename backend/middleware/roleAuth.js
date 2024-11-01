@@ -1,5 +1,5 @@
-// middleware/roleAuth.js
-import userModel from '../models/userModel.js'; // Make sure to import your user model
+
+import userModel from '../models/userModel.js';
 
 const roleAuth = (expectedRole) => {
   return async (req, res, next) => {
