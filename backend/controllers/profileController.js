@@ -1,18 +1,29 @@
 import userModel from "../models/userModel.js";
 import fs from "fs";
 import path from "path";
+import {v2 as cloudinary} from "cloudinary";
+
 
 // Controller for updating user profile, including avatar upload
-export const updateUserProfile = async (req, res) => {
+ const updateUserProfile = async (req, res) => {
   try {
     const userId = req.user.id; // Assume req.user.id is set by authentication middleware
     const { name, email, phone, address } = req.body; // Optional fields for user profile update
 
-    // Retrieve the file path if an avatar was uploaded
+    // Variable to hold avatar URL
     let avatarUrl = null;
+
+    // Check if an avatar was uploaded
     if (req.file) {
-      avatarUrl = req.file.path; // Use file path from multer
+      // Upload the image to Cloudinary
+      const result = await cloudinary.uploader.upload(req.file.path);
+      avatarUrl = result.secure_url; // Get the secure URL of the uploaded image
+      console.log(result)
+
+      // Optionally, delete the local file after uploading to Cloudinary
+      fs.unlinkSync(req.file.path);
     }
+    console.log(avatarUrl);
 
     // Find and update the user
     const updatedUser = await userModel.findByIdAndUpdate(
@@ -22,7 +33,7 @@ export const updateUserProfile = async (req, res) => {
         email: email || undefined,
         phone: phone || undefined,
         address: address || undefined,
-        avatar: avatarUrl || undefined,
+        avatar: avatarUrl || undefined, // Set avatar URL from Cloudinary
       },
       { new: true, omitUndefined: true } // Return the updated document and ignore undefined values
     );
@@ -44,8 +55,25 @@ export const updateUserProfile = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error.message)
-    res.json({success:false, msg: "Profile update failed." });
+    console.error(error.message);
+    res.status(500).json({ success: false, msg: "Profile update failed." });
+  }
+};
+const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.id; // Assuming user ID is set by authentication middleware
+    const user = await userModel.findById(userId).select('-password'); // Exclude password field
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, msg: "Failed to retrieve user profile." });
   }
 };
 
+export { updateUserProfile, getUserProfile }; // Export both functions
+//try this and try to fetch from the frontend using axios

@@ -1,24 +1,78 @@
-import React from 'react'
+import { useContext, useState, useEffect } from 'react';
 import { assets } from '../assets/assets/frontend_assets/assets';
+import { ShopContext } from '../context/ShopContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Profile = () => {
+  const { backendUrl } = useContext(ShopContext);
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    avatar: '', // Cloudinary image URL
+  });
+  const [file, setFile] = useState(null);
 
+  // useEffect(() => {
+  //   // Fetch user data on component mount
+  //   const fetchUserData = async () => {
+  //     try {
+  //       const response = await axios.get(`${backendUrl}/api/profile/get`); // Adjust to your API endpoint
+  //       setUserData(response.data.user);
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error.message);
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, []);
 
-
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    // Implement update logic here to send data to backend
+  // Handle input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData({ ...userData, [name]: value });
+    console.log(value)
   };
-  
+
+  // Handle file selection for avatar
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  // Submit profile updates
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('name', userData.name);
+    formData.append('email', userData.email);
+    formData.append('phone', userData.phone);
+    formData.append('address', userData.address);
+    if (file) formData.append('avatar', file); // Append file if selected
+
+    try {
+      const response = await axios.patch('/api/profile/update', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      toast.success("Profile updated successfully!");
+      setUserData(response.data.user); // Update profile display
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast.error("Failed to update profile.");
+    }
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen py-10">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">Your Profile</h1>
       <form onSubmit={handleUpdate} className="w-full max-w-md space-y-4 flex flex-col items-center">
-        
+
         {/* Avatar upload section */}
         <div className="relative mb-4">
           <img
-            src={assets.profile_icon}
+            src={userData.avatar || assets.profile_icon} // Use the avatar if available
             alt="Profile"
             className="w-36 h-36 rounded-full border-4 border-black cursor-pointer hover:opacity-80"
             onClick={() => document.getElementById('fileInput').click()}
@@ -27,7 +81,7 @@ const Profile = () => {
             type="file"
             id="fileInput"
             className="hidden"
-            // onChange={handleAvatarChange}
+            onChange={handleFileChange} // Bind the file change handler
           />
           <div
             className="absolute bottom-3 left-24 bg-black text-white p-2 rounded-full cursor-pointer hover:bg-indigo-600 transition"
@@ -51,15 +105,16 @@ const Profile = () => {
         </div>
 
         {/* User info */}
-        <div className=" p-6 bg-white rounded-lg shadow-2xl space-y-4">
+        <div className="p-6 bg-white rounded-lg shadow-2xl space-y-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">
               Name
             </label>
             <input
               type="text"
-              // value={name}
-              // onChange={(e) => setName(e.target.value)}
+              name="name" // Bind name to userData
+              value={userData.name} // Use state value
+              onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -70,8 +125,9 @@ const Profile = () => {
             </label>
             <input
               type="email"
-              // value={email}
-              // onChange={(e) => setEmail(e.target.value)}
+              name="email" // Bind email to userData
+              value={userData.email} // Use state value
+              onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -82,8 +138,9 @@ const Profile = () => {
             </label>
             <input
               type="number"
-              // value={phone}
-              // onChange={(e) => setPhone(e.target.value)}
+              name="phone" // Bind phone to userData
+              value={userData.phone} // Use state value
+              onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -94,8 +151,9 @@ const Profile = () => {
             </label>
             <input
               type="text"
-              // value={address}
-              // onChange={(e) => setAddress(e.target.value)}
+              name="address" // Bind address to userData
+              value={userData.address} // Use state value
+              onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -110,6 +168,7 @@ const Profile = () => {
       </form>
     </div>
   );
-}
+};
 
-export default Profile
+export default Profile;
+

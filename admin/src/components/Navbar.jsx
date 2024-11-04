@@ -1,12 +1,11 @@
 import React from "react";
-import { assets } from "../assets/seller_assets/assets";
 
-const Navbar = ({ setAuth }) => {
+const Navbar = () => {
   return (
     <div className="flex items-center py-2 px-[4%] justify-between">
       <div id="title">
         <h1 className="font-semibold text-5xl italic w-[max(10%,80px)]">
-          SellSwift
+          SellSwift{" "}
         </h1>
         <span>Admin panel</span>
       </div>
