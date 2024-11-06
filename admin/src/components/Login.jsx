@@ -1,6 +1,7 @@
 import axios from "axios";
 import { backendUrl } from "../App";
 import { useState } from "react";
+import {toast} from 'react-toastify'
 const Login = ({setToken}) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -62,4 +63,3 @@ const Login = ({setToken}) => {
 
 export default Login;
 
-//fix the admin login process here 8:11:27 greatstack
