@@ -41,15 +41,17 @@ const AdminPanel = ({ token }) => {
   // Function to remove a user
   const handleRemoveUser = async (userId) => {
     try {
-      const { data } = await axios.post(
+      const { data } = await axios.post(backendUrl +
         "/api/admin/rm-users",
         { userId },
-        { headers: { token: localStorage.getItem("token") } }
+        { headers: {token} }
       );
       if (data.success) {
+        toast.success(data.msg)
         setUsers((prevUsers) =>
           prevUsers.filter((user) => user._id !== userId)
         );
+        await fetchUsers();
       } else {
         toast.error(data.error.msg)
       }
