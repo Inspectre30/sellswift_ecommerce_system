@@ -7,8 +7,8 @@ import {v2 as cloudinary} from "cloudinary";
 // Controller for updating user profile, including avatar upload
  const updateUserProfile = async (req, res) => {
   try {
-    const userId = req.user.id; // Assume req.user.id is set by authentication middleware
-    const { name, email, phone, address } = req.body; // Optional fields for user profile update
+    // const userId = req.user._id; // Assume req.user.id is set by authentication middleware
+    const {userId, name, email, phone, address } = req.body; // Optional fields for user profile update
 
     // Variable to hold avatar URL
     let avatarUrl = null;
@@ -23,7 +23,7 @@ import {v2 as cloudinary} from "cloudinary";
       // Optionally, delete the local file after uploading to Cloudinary
       fs.unlinkSync(req.file.path);
     }
-    console.log(avatarUrl);
+    console.log(userId)
 
     // Find and update the user
     const updatedUser = await userModel.findByIdAndUpdate(
@@ -61,9 +61,9 @@ import {v2 as cloudinary} from "cloudinary";
 };
 const getUserProfile = async (req, res) => {
   try {
-    const userId = req.user.id; // Assuming user ID is set by authentication middleware
+    const {userId }= req.body; // Assuming user ID is set by authentication middleware
     const user = await userModel.findById(userId).select('-password'); // Exclude password field
-
+  
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }

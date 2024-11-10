@@ -16,6 +16,7 @@ const Login = ({ setAuth, setRole }) => {
       if (response.data.role === "seller") {
         setAuth(true);
         setRole(response.data.role)
+        console.log(response.data.role)
       } else {
         toast("Unauthorized access");
       }

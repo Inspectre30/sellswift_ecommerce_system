@@ -1,38 +1,42 @@
-import { useContext, useState, useEffect } from 'react';
-import { assets } from '../assets/assets/frontend_assets/assets';
-import { ShopContext } from '../context/ShopContext';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { useContext, useState, useEffect } from "react";
+import { assets } from "../assets/assets/frontend_assets/assets";
+import { ShopContext } from "../context/ShopContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Profile = () => {
-  const { backendUrl } = useContext(ShopContext);
+  const { backendUrl, token } = useContext(ShopContext);
   const [userData, setUserData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    avatar: '', // Cloudinary image URL
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    avatar: "", // Cloudinary image URL
   });
   const [file, setFile] = useState(null);
 
-  // useEffect(() => {
-  //   // Fetch user data on component mount
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await axios.get(`${backendUrl}/api/profile/get`); // Adjust to your API endpoint
-  //       setUserData(response.data.user);
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error.message);
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, []);
+  useEffect(() => {
+    // Fetch user data on component mount
+    const fetchUserData = async () => {
+      try {
+        // or wherever you're storing the JWT tokenF
+        const response = await axios.get(backendUrl + '/api/profile/get', {headers: {token}}); // Adjust to your API endpoint
+        
+        console.log(response.data.user);
+      
+      } catch (error) {
+        toast.error(error.message);
+        console.error("Error fetching user data:", error.message);
+      }
+    };
+    fetchUserData();
+  }, []);
 
   // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
-    console.log(value)
+    console.log(value);
   };
 
   // Handle file selection for avatar
@@ -44,38 +48,47 @@ const Profile = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('name', userData.name);
-    formData.append('email', userData.email);
-    formData.append('phone', userData.phone);
-    formData.append('address', userData.address);
-    if (file) formData.append('avatar', file); // Append file if selected
+    formData.append("name", userData.name);
+    formData.append("email", userData.email);
+    formData.append("phone", userData.phone);
+    formData.append("address", userData.address);
+    if (file) formData.append("avatar", file); // Append file if selected
 
     try {
-      const response = await axios.patch('/api/profile/update', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      const response = await axios.patch(
+        backendUrl + "/api/profile/update",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          Authorization: `Bearer ${token}`,
+        }
+      );
       toast.success("Profile updated successfully!");
       setUserData(response.data.user); // Update profile display
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error("Error updating profile:", error.message);
       toast.error("Failed to update profile.");
     }
   };
 
   return (
     <div className="flex flex-col items-center min-h-screen py-10">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Your Profile</h1>
-      <form onSubmit={handleUpdate} className="w-full max-w-md space-y-4 flex flex-col items-center">
-
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
+        Your Profile
+      </h1>
+      <form
+        onSubmit={handleUpdate}
+        className="w-full max-w-md space-y-4 flex flex-col items-center"
+      >
         {/* Avatar upload section */}
         <div className="relative mb-4">
           <img
             src={userData.avatar || assets.profile_icon} // Use the avatar if available
             alt="Profile"
             className="w-36 h-36 rounded-full border-4 border-black cursor-pointer hover:opacity-80"
-            onClick={() => document.getElementById('fileInput').click()}
+            onClick={() => document.getElementById("fileInput").click()}
           />
           <input
             type="file"
@@ -85,7 +98,7 @@ const Profile = () => {
           />
           <div
             className="absolute bottom-3 left-24 bg-black text-white p-2 rounded-full cursor-pointer hover:bg-indigo-600 transition"
-            onClick={() => document.getElementById('fileInput').click()}
+            onClick={() => document.getElementById("fileInput").click()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -171,4 +184,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
