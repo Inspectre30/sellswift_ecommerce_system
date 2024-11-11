@@ -5,73 +5,73 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const Profile = () => {
-  const { backendUrl, token } = useContext(ShopContext);
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-    avatar: "", // Cloudinary image URL
-  });
-  const [file, setFile] = useState(null);
+  // const { backendUrl, token } = useContext(ShopContext);
+  // const [userData, setUserData] = useState({
+  //   name: "",
+  //   email: "",
+  //   phone: "",
+  //   address: "",
+  //   avatar: "", // Cloudinary image URL
+  // });
+  // const [file, setFile] = useState(null);
 
-  useEffect(() => {
-    // Fetch user data on component mount
-    const fetchUserData = async () => {
-      try {
-        // or wherever you're storing the JWT tokenF
-        const response = await axios.get(backendUrl + '/api/profile/get', {headers: {token}}); // Adjust to your API endpoint
+  // useEffect(() => {
+  //   // Fetch user data on component mount
+  //   const fetchUserData = async () => {
+  //     try {
+  //       // or wherever you're storing the JWT tokenF
+  //       const response = await axios.get(backendUrl + '/api/profile/get', {headers: {token}}); // Adjust to your API endpoint
         
-        console.log(response.data.user);
+  //       console.log(response.data.user);
       
-      } catch (error) {
-        toast.error(error.message);
-        console.error("Error fetching user data:", error.message);
-      }
-    };
-    fetchUserData();
-  }, []);
+  //     } catch (error) {
+  //       toast.error(error.message);
+  //       console.error("Error fetching user data:", error.message);
+  //     }
+  //   };
+  //   fetchUserData();
+  // }, []);
 
-  // Handle input change
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-    console.log(value);
-  };
+  // // Handle input change
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setUserData({ ...userData, [name]: value });
+  //   console.log(value);
+  // };
 
-  // Handle file selection for avatar
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
+  // // Handle file selection for avatar
+  // const handleFileChange = (e) => {
+  //   setFile(e.target.files[0]);
+  // };
 
-  // Submit profile updates
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", userData.name);
-    formData.append("email", userData.email);
-    formData.append("phone", userData.phone);
-    formData.append("address", userData.address);
-    if (file) formData.append("avatar", file); // Append file if selected
+  // // Submit profile updates
+  // const handleUpdate = async (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  //   formData.append("name", userData.name);
+  //   formData.append("email", userData.email);
+  //   formData.append("phone", userData.phone);
+  //   formData.append("address", userData.address);
+  //   if (file) formData.append("avatar", file); // Append file if selected
 
-    try {
-      const response = await axios.patch(
-        backendUrl + "/api/profile/update",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          Authorization: `Bearer ${token}`,
-        }
-      );
-      toast.success("Profile updated successfully!");
-      setUserData(response.data.user); // Update profile display
-    } catch (error) {
-      console.error("Error updating profile:", error.message);
-      toast.error("Failed to update profile.");
-    }
-  };
+  //   try {
+  //     const response = await axios.patch(
+  //       backendUrl + "/api/profile/update",
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //         Authorization: `Bearer ${token}`,
+  //       }
+  //     );
+  //     toast.success("Profile updated successfully!");
+  //     setUserData(response.data.user); // Update profile display
+  //   } catch (error) {
+  //     console.error("Error updating profile:", error.message);
+  //     toast.error("Failed to update profile.");
+  //   }
+  // };
 
   return (
     <div className="flex flex-col items-center min-h-screen py-10">
@@ -79,13 +79,13 @@ const Profile = () => {
         Your Profile
       </h1>
       <form
-        onSubmit={handleUpdate}
+        // onSubmit={handleUpdate}
         className="w-full max-w-md space-y-4 flex flex-col items-center"
       >
         {/* Avatar upload section */}
         <div className="relative mb-4">
           <img
-            src={userData.avatar || assets.profile_icon} // Use the avatar if available
+            src={assets.profile_icon} // Use the avatar if available
             alt="Profile"
             className="w-36 h-36 rounded-full border-4 border-black cursor-pointer hover:opacity-80"
             onClick={() => document.getElementById("fileInput").click()}
@@ -94,11 +94,11 @@ const Profile = () => {
             type="file"
             id="fileInput"
             className="hidden"
-            onChange={handleFileChange} // Bind the file change handler
+            //onChange={handleFileChange} // Bind the file change handler
           />
           <div
             className="absolute bottom-3 left-24 bg-black text-white p-2 rounded-full cursor-pointer hover:bg-indigo-600 transition"
-            onClick={() => document.getElementById("fileInput").click()}
+            //onClick={() => document.getElementById("fileInput").click()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -126,8 +126,8 @@ const Profile = () => {
             <input
               type="text"
               name="name" // Bind name to userData
-              value={userData.name} // Use state value
-              onChange={handleChange} // Bind the change handler
+              //value={userData.name} // Use state value
+              //onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -139,8 +139,8 @@ const Profile = () => {
             <input
               type="email"
               name="email" // Bind email to userData
-              value={userData.email} // Use state value
-              onChange={handleChange} // Bind the change handler
+              //value={userData.email} // Use state value
+              //onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -152,8 +152,8 @@ const Profile = () => {
             <input
               type="number"
               name="phone" // Bind phone to userData
-              value={userData.phone} // Use state value
-              onChange={handleChange} // Bind the change handler
+             // value={userData.phone} // Use state value
+              //onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -165,8 +165,8 @@ const Profile = () => {
             <input
               type="text"
               name="address" // Bind address to userData
-              value={userData.address} // Use state value
-              onChange={handleChange} // Bind the change handler
+              //value={userData.address} // Use state value
+              //onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
 import { assets } from "../assets/seller_assets/assets";
-import { useContext } from "react";
+
 const Orders = ({ role }) => {
   const [orders, setOrders] = useState([]);
 
