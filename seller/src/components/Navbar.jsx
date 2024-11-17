@@ -8,7 +8,7 @@ const Navbar = ({ setAuth }) => {
         <h1 className="font-semibold text-5xl italic w-[max(10%,80px)]">
           SellSwift
         </h1>
-        <span>Admin panel</span>
+        <span>Seller panel</span>
       </div>
 
       <button
