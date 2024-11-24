@@ -76,6 +76,19 @@ const Product = () => {
           </div>
         </div>
       </div>
+      {/* Seller */}
+      <div id="seller" className="flex flex-row gap-3 mt-7 border px-6 py-6">
+        <div id="shop-icon">
+        <i className='bx bxs-store-alt text-5xl'></i>
+        </div>
+        <div id="shop-desc">
+          <div id="title" className="text-xl">Inspectre</div>
+          <div className="cta flex flex-row gap-3">
+            <button className="flex items-center gap-2 bg-black text-white p-3 text-sm"><i className='bx bxs-chat'></i>Chat Seller</button>
+            <button className="flex items-center gap-2 border p-3 text-sm"><i className='bx bx-store-alt' ></i>View Shop</button>
+          </div>
+        </div>
+      </div>
 
       {/* Description and review section  */}
       <div className="mt-20">
