@@ -83,6 +83,7 @@ const registerUser = async (req, res) => {
   }
 };
 //route for admins
+
 const adminLogin = async (req, res) => {
   try {
     const {email,password} = req.body 
@@ -102,8 +103,7 @@ const adminLogin = async (req, res) => {
 
 
 
-///TASK: COPY THE FOLLOWING STYLES BUT CHANGE THE "ADMIN PANEL" TO "SELLER PANEL" And also pay attention on how he fetch data.
-//For example fetching based from roles: "Seller"
+
 
 export { loginUser, registerUser, adminLogin};
 
