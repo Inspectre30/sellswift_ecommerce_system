@@ -119,6 +119,8 @@ export const logout = async (req,res) => {
 
 }
 
+//continue 1:06:30
+
 //route for admins
 
 const adminLogin = async (req, res) => {
