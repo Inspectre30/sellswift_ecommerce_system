@@ -1,7 +1,7 @@
 import validator from "validator";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
 import nodemailer from "nodemailer";
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
@@ -105,7 +105,18 @@ const registerUser = async (req, res) => {
 
 //logout feature
 export const logout = async (req,res) => {
- //continue: 58:49
+  try {
+    res.clearCookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+     
+    });
+    return res.json({success: true, msg: "Successfully Logged out"})
+  } catch (error) {
+    return res.json({success: false, msg: error.message})
+  }
+
 }
 
 //route for admins
@@ -129,4 +140,4 @@ const adminLogin = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, adminLogin };
+export { loginUser, registerUser, adminLogin};
