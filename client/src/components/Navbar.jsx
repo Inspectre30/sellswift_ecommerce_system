@@ -14,10 +14,13 @@ const Navbar = () => {
   } = useContext(ShopContext);
 
   const logout = () => {
-    navigate("/login");
-    localStorage.removeItem("token");
-    setToken("");
-    setCartItems({});
+    // navigate("/login");
+    // localStorage.removeItem("token");
+    // setToken("");
+    // setCartItems({});
+    
+    //the functionality in this will be change instead of relying with localStorage it will rely on cookies from your
+    //backend userController logout function. U can use it by fetching using axios
   };
   return (
     <div className="flex items-center justify-between py-5">
