@@ -4,12 +4,15 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET,{expiresIn: '7d'});
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 //Route for user login
 const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.json({ success: false, msg: "Email and password required!" });
+  }
   try {
-    const { email, password } = req.body;
     const user = await userModel.findOne({ email });
 
     if (!user) {
@@ -17,9 +20,15 @@ const loginUser = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
+    //password verification
     if (isMatch) {
       const token = createToken(user._id);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
 
       if (user.role === "customer") {
         res.json({ success: true, role: "customer", token });
@@ -74,31 +83,15 @@ const registerUser = async (req, res) => {
 
     await newUser.save();
 
-    const token = createToken(newUser._id)
+    const token = createToken(newUser._id);
 
-    res.cookie('token', token, {
+    res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production'
-    })
-
-    //continue: 47:28
-
-    // Send verification email
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.ADMIN_EMAIL, // Your email address
-        pass: process.env.ADMIN_PASSWORD, // Your email password
-      },
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    const verificationUrl = `http://sellswift.com/verify-email?token=${verificationToken}`;
-
-    await transporter.sendMail({
-      to: email,
-      subject: "Verify Your Email",
-      html: `<p>Thank you for registering. Click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
-    });
 
     res.json({
       success: true,
@@ -109,6 +102,11 @@ const registerUser = async (req, res) => {
     res.json({ success: false, msg: err.message });
   }
 };
+
+//logout feature
+export const logout = async (req,res) => {
+ //continue: 58:49
+}
 
 //route for admins
 
