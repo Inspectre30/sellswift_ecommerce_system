@@ -1,15 +1,18 @@
 import validator from "validator";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
+import jwt from 'jsonwebtoken'
+import transporter from '../config/nodemailer.js'
 const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET,{expiresIn: '7d'});
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 //Route for user login
 const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    return res.json({ success: false, msg: "Email and password required!" });
+  }
   try {
-    const { email, password } = req.body;
     const user = await userModel.findOne({ email });
 
     if (!user) {
@@ -17,9 +20,15 @@ const loginUser = async (req, res) => {
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
+    //password verification
     if (isMatch) {
       const token = createToken(user._id);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
 
       if (user.role === "customer") {
         res.json({ success: true, role: "customer", token });
@@ -64,7 +73,7 @@ const registerUser = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user with `verified` set to false
+    // Create a new user 
     const newUser = new userModel({
       name,
       email,
@@ -74,32 +83,26 @@ const registerUser = async (req, res) => {
 
     await newUser.save();
 
-    const token = createToken(newUser._id)
+    const token = createToken(newUser._id);
 
-    res.cookie('token', token, {
+    res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production'
-    })
-
-    //continue: 47:28
-
-    // Send verification email
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.ADMIN_EMAIL, // Your email address
-        pass: process.env.ADMIN_PASSWORD, // Your email password
-      },
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    const verificationUrl = `http://sellswift.com/verify-email?token=${verificationToken}`;
-
-    await transporter.sendMail({
+    //send email
+    const mailOptions = {
+      from: process.env.ADMIN_EMAIL,
       to: email,
-      subject: "Verify Your Email",
-      html: `<p>Thank you for registering. Click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
-    });
+      subject: 'Welcome to SellSwift',
+      text: `Welcome to SellSwift website. Your account has been created with email id: ${email}`
+    }
 
+    await transporter.sendMail(mailOptions);
+
+    //1:24:36
     res.json({
       success: true,
       msg: "Registration successful. Please check your email for verification.",
@@ -109,6 +112,24 @@ const registerUser = async (req, res) => {
     res.json({ success: false, msg: err.message });
   }
 };
+
+//logout feature
+export const logout = async (req,res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+     
+    });
+    return res.json({success: true, msg: "Successfully Logged out"})
+  } catch (error) {
+    return res.json({success: false, msg: error.message})
+  }
+
+}
+
+
 
 //route for admins
 
@@ -131,4 +152,4 @@ const adminLogin = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, adminLogin };
+export { loginUser, registerUser, adminLogin};
