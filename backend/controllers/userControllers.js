@@ -8,7 +8,7 @@ const createToken = (id) => {
 };
 
 //1:44:02
-
+//ALWAYS CHECK WHICH BRANCH YOU ARE IN(AUTH-FEATURE)
 
 //Route for user login
 const loginUser = async (req, res) => {
