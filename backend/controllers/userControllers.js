@@ -94,7 +94,7 @@ const registerUser = async (req, res) => {
 
     //send email
     const mailOptions = {
-      from: process.env.SENDER_EMAIL,
+      from: process.env.ADMIN_EMAIL,
       to: email,
       subject: 'Welcome to SellSwift',
       text: `Welcome to SellSwift website. Your account has been created with email id: ${email}`
@@ -102,7 +102,7 @@ const registerUser = async (req, res) => {
 
     await transporter.sendMail(mailOptions);
 
-
+    //1:24:36
     res.json({
       success: true,
       msg: "Registration successful. Please check your email for verification.",

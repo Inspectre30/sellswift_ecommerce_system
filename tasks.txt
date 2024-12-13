@@ -19,3 +19,6 @@
     //   subject: "Verify Your Email",
     //   html: `<p>Thank you for registering. Click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
     // });
+
+
+mailgun pass: Shop&Sell42!
