@@ -1,11 +1,15 @@
 import validator from "validator";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import jwt from 'jsonwebtoken'
-import transporter from '../config/nodemailer.js'
+import jwt from "jsonwebtoken";
+import transporter from "../config/nodemailer.js";
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
+
+//1:44:02
+
+
 //Route for user login
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -73,7 +77,7 @@ const registerUser = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user 
+    // Create a new user
     const newUser = new userModel({
       name,
       email,
@@ -96,9 +100,9 @@ const registerUser = async (req, res) => {
     const mailOptions = {
       from: process.env.ADMIN_EMAIL,
       to: email,
-      subject: 'Welcome to SellSwift',
-      text: `Welcome to SellSwift website. Your account has been created with email id: ${email}`
-    }
+      subject: "Welcome to SellSwift",
+      text: `Welcome to SellSwift website. Your account has been created with email id: ${email}`,
+    };
 
     await transporter.sendMail(mailOptions);
 
@@ -114,22 +118,74 @@ const registerUser = async (req, res) => {
 };
 
 //logout feature
-export const logout = async (req,res) => {
+const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
-     
     });
-    return res.json({success: true, msg: "Successfully Logged out"})
+    return res.json({ success: true, msg: "Successfully Logged out" });
   } catch (error) {
-    return res.json({success: false, msg: error.message})
+    return res.json({ success: false, msg: error.message });
   }
+};
 
+const sendVerifyOtp = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    console.log(userId);
+
+    const user = await userModel.findById(userId);
+    if (user.isAccountVerified) {
+      return res.json({ success: false, msg: "Account already verified." });
+    }
+
+    const otp = String(Math.floor(100000 + Math.random() * 900000));
+
+    user.verifyOtp = otp;
+    user.verifyOtpExpireAt = Date.now() + 3 * 60 * 1000;
+    await user.save();
+
+    const mailOption = {
+      from: process.env.ADMIN_EMAIL,
+      to: user.email,
+      subject: "Accounr Verification OTP",
+      text: `Your OTP is ${otp}`,
+    };
+    await transporter.sendMail(mailOption)
+    res.json({success: true, msg:'Verification OTP Sent on Email.'})
+  } catch (error) {
+    return res.json({ success: false, msg: error.message });
+  }
+};
+
+const verifyEmail = async (req,res) => {
+  const {userId, otp } = req.body
+  if(!userId || !otp) {
+    return res.json({success: false, msg: "Missing Details"})
+  }
+  try {
+    const user = await userModel.findById(userId)
+    if(!user){
+      return res.json({success: false, msg: "User not found"})
+    }
+    if(user.verifyOtp === '' || user.verifyOtp !== otp){
+      return res.json({success: false, msg:"Invalid Otp"})
+    }
+    if(user.verifyExpireAt < Date.now()) {
+      return res.json({success: false, msg:"OTP expired"})
+    }
+    user.isAccountVerified = true;
+    user.verifyOtp = ''
+    user.verifyOtpExpireAt = 0;
+    await user.save();
+
+    return res.json({success: false, msg: "Email verified successfully."})
+  } catch (error) {
+    return res.json({ success: false, msg: error.message });
+  }
 }
-
-
 
 //route for admins
 
@@ -152,4 +208,4 @@ const adminLogin = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, adminLogin};
+export { loginUser, registerUser, adminLogin, logout };
