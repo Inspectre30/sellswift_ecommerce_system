@@ -8,6 +8,7 @@ import productRouter from "./routes/productRoute.js";
 import adminRouter from "./routes/adminRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
+import cookieParser from "cookie-parser";
 
 import profileRouter from "./routes/updateProfileRoute.js";
 const app = express();
@@ -19,6 +20,7 @@ connectCloudinary();
 //middlewares
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser())
 
 //api-endpoints
 app.use("/api/user", userRouter);

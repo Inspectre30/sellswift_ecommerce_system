@@ -134,7 +134,7 @@ const logout = async (req, res) => {
 const sendVerifyOtp = async (req, res) => {
   try {
     const { userId } = req.body;
-    console.log(userId);
+    
 
     const user = await userModel.findById(userId);
     if (user.isAccountVerified) {
@@ -208,4 +208,4 @@ const adminLogin = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, adminLogin, logout };
+export { loginUser, registerUser, adminLogin, logout,sendVerifyOtp,verifyEmail };
