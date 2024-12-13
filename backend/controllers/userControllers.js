@@ -2,7 +2,7 @@ import validator from "validator";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from 'jsonwebtoken'
-// import nodemailer from "nodemailer";
+import transporter from '../config/nodemailer.js'
 const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
@@ -73,7 +73,7 @@ const registerUser = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user with `verified` set to false
+    // Create a new user 
     const newUser = new userModel({
       name,
       email,
@@ -92,6 +92,16 @@ const registerUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    //send email
+    const mailOptions = {
+      from: process.env.SENDER_EMAIL,
+      to: email,
+      subject: 'Welcome to SellSwift',
+      text: `Welcome to SellSwift website. Your account has been created with email id: ${email}`
+    }
+
+    await transporter.sendMail(mailOptions);
+
 
     res.json({
       success: true,
@@ -106,7 +116,7 @@ const registerUser = async (req, res) => {
 //logout feature
 export const logout = async (req,res) => {
   try {
-    res.clearCookie("token", token, {
+    res.clearCookie("token", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
