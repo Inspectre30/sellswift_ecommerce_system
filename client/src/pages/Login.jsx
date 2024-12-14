@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast} from 'react-toastify';
+import { Link } from "react-router-dom";
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
   const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
@@ -99,7 +100,7 @@ const Login = () => {
         </div>
       )}
       <div className="w-full flex justify-between text-sm mt-[8px]">
-        <p className="cursor-pointer">Forgot your password?</p>
+        <Link to="/reset-password"><p className="cursor-pointer">Forgot your password?</p></Link>
         {currentState === "Login" ? (
           <p
             onClick={() => setCurrentState("Sign Up")}
@@ -124,3 +125,4 @@ const Login = () => {
 };
 
 export default Login;
+//3:21:04 https://www.youtube.com/watch?v=7BTsepZ9xp8&list=PLnOpVMdlIZbyxYQvVVkjpwNpbRS0Edzos&index=11

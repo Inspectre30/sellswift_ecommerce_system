@@ -61,13 +61,13 @@ import {v2 as cloudinary} from "cloudinary";
 };
 const getUserProfile = async (req, res) => {
   try {
-    const {userId }= req.body; // Assuming user ID is set by authentication middleware
-    const user = await userModel.findById(userId).select('-password'); // Exclude password field
-  
+    const {userId}= req.body; // Assuming user ID is set by authentication middleware
+    const user = await userModel.findById(userId); // Exclude password field
+   
     if (!user) {
       return res.json({success: false, msg: "User not found" });
     }
-
+    
     res.json({success:true, userData:{name: user.name, email: user.email, isAccountVerified: user.isAccountVerified} });
   } catch (error) {
     console.error(error.message);

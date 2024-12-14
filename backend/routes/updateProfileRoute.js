@@ -5,7 +5,7 @@ import {
   getUserProfile,
 } from "../controllers/profileController.js";
 import profileAuth from "../middleware/profileAuth.js";
-
+import authUser from "../middleware/auth.js";
 
 const profileRouter = express.Router();
 
@@ -23,7 +23,7 @@ const upload = multer({ storage });
 
 // Route to update the user profile
 profileRouter.patch("/update",profileAuth,upload.single("avatar"), updateUserProfile);
-profileRouter.get("/get", getUserProfile);
+profileRouter.get("/get-user",authUser, getUserProfile);
 
 export default profileRouter;
 //continue 2:22:20
