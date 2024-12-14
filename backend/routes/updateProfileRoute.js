@@ -26,3 +26,4 @@ profileRouter.patch("/update",profileAuth,upload.single("avatar"), updateUserPro
 profileRouter.get("/get", getUserProfile);
 
 export default profileRouter;
+//continue 2:22:20
