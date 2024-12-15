@@ -3,17 +3,21 @@ import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast} from 'react-toastify';
 import { Link } from "react-router-dom";
+//CONTINUE 3:37:09 
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
-  const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
+  const { navigate, backendUrl, setIsLoggedIn } = useContext(ShopContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
 
   const onSubmitHandler = async (event) => {
-    event.preventDefault();
+ 
     try {
+      event.preventDefault();
+
+      axios.defaults.withCredentials = true;
       if (currentState === "Sign Up") {
         const response = await axios.post(backendUrl + "/api/user/register", {
           name,
@@ -22,8 +26,9 @@ const Login = () => {
           role,
         });
         if (response.data.success) {
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
+          setIsLoggedIn(true)
+          navigate('/')
+          
         } else {
           toast.error(response.error.msg);
         }

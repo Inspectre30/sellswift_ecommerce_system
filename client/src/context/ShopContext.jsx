@@ -13,6 +13,8 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState('');
+  const [isLoggedin, setIsLoggedIn] = useState(false);
+  const [userData, setUserData] = useState(false);
   const navigate = useNavigate();
   const addToCart = async (itemId, size) => {
     let cartData = structuredClone(cartItems);
@@ -151,7 +153,9 @@ const ShopContextProvider = (props) => {
     navigate,
     backendUrl,
     setCartItems,
-    token, setToken
+    token, setToken,
+    isLoggedin,setIsLoggedIn,
+    userData, setUserData
   };
 
   return (
