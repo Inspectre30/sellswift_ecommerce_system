@@ -1,19 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
-import { toast} from 'react-toastify';
-import { Link } from "react-router-dom";
-//CONTINUE 3:37:09 
+import { toast } from "react-toastify";
+import { Link, replace } from "react-router-dom";
+//CONTINUE 3:47:25
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
-  const { navigate, backendUrl, setIsLoggedIn } = useContext(ShopContext);
+  const { navigate, backendUrl, setIsLoggedIn, getUserData} = useContext(ShopContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
 
   const onSubmitHandler = async (event) => {
- 
     try {
       event.preventDefault();
 
@@ -26,8 +25,11 @@ const Login = () => {
           role,
         });
         if (response.data.success) {
-          setIsLoggedIn(true)
-          navigate('/')
+          setCurrentState("Login");
+          navigate("/verify-email", {replace:true});
+          getUserData()
+
+          const verify = await axios.post(backendUrl + "/api/user/send-verify-otp")
           
         } else {
           toast.error(response.error.msg);
@@ -38,8 +40,9 @@ const Login = () => {
           password,
         });
         if (response.data.success) {
-          setToken(response.data.token);
-          localStorage.setItem("token", response.data.token);
+          setIsLoggedIn(true);
+     
+         
         } else {
           toast.error(response.data.msg);
         }
@@ -51,10 +54,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if(token) {
-      navigate('/')
+    if (token) {
+      navigate("/");
     }
-  },[token])
+  }, [token]);
 
   return (
     <form
@@ -105,7 +108,9 @@ const Login = () => {
         </div>
       )}
       <div className="w-full flex justify-between text-sm mt-[8px]">
-        <Link to="/reset-password"><p className="cursor-pointer">Forgot your password?</p></Link>
+        <Link to="/reset-password">
+          <p className="cursor-pointer">Forgot your password?</p>
+        </Link>
         {currentState === "Login" ? (
           <p
             onClick={() => setCurrentState("Sign Up")}

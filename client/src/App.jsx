@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
 import Profile from './pages/Profile'
 import Messages from "./pages/Messages";
+import VerifyEmail from "./pages/VerifyEmail";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,6 +37,7 @@ const App = () => {
         <Route path='/profile' element={<Profile  />}/>
         <Route path='/messages' element={<Messages />}/>
         <Route path='/reset-password' element={<ResetPassword />}/>
+        <Route path='/verify-email' element={<VerifyEmail />}/>
       
         
       </Routes>

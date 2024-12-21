@@ -72,7 +72,7 @@ const Profile = () => {
   //     toast.error("Failed to update profile.");
   //   }
   // };
-
+  const {userData} = useContext(ShopContext);
   return (
     <div className="flex flex-col items-center min-h-screen py-10">
       <h1 className="text-3xl font-semibold text-gray-800 mb-6">
@@ -126,9 +126,10 @@ const Profile = () => {
             <input
               type="text"
               name="name" // Bind name to userData
-              //value={userData.name} // Use state value
+              value={userData.name} // Use state value
               //onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
+              
             />
           </div>
 
@@ -139,7 +140,7 @@ const Profile = () => {
             <input
               type="email"
               name="email" // Bind email to userData
-              //value={userData.email} // Use state value
+              value={userData.email} // Use state value
               //onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
@@ -152,7 +153,7 @@ const Profile = () => {
             <input
               type="number"
               name="phone" // Bind phone to userData
-             // value={userData.phone} // Use state value
+              value={userData.phone} // Use state value
               //onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
@@ -165,7 +166,7 @@ const Profile = () => {
             <input
               type="text"
               name="address" // Bind address to userData
-              //value={userData.address} // Use state value
+              value={userData.address} // Use state value
               //onChange={handleChange} // Bind the change handler
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
