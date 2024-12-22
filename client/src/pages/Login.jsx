@@ -56,11 +56,7 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    if (token) {
-      navigate("/");
-    }
-  }, [token]);
+ 
 
   return (
     <form

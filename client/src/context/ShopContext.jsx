@@ -131,16 +131,20 @@ const ShopContextProvider = (props) => {
       
     }
   }
+  const getAuthState = async () => {
+    try {
+      const response = await axios.get(backendUrl + '/api/user/is-auth')
+    } catch (error) {
+      
+    }
+  }
   
 
   useEffect(() => {
     getProductsData();
   }, []);
   useEffect(() => {
-    if(!token && localStorage.getItem("token")) {
-      setToken(localStorage.getItem("token"))
-      getUserCart(localStorage.getItem('token'));
-    }
+   
   })
 
   //   useEffect(() => {
