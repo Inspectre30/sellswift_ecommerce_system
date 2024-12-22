@@ -11,6 +11,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("")
 
   const onSubmitHandler = async (event) => {
     try {
@@ -22,6 +23,7 @@ const Login = () => {
           name,
           email,
           password,
+          phoneNumber,
           role,
         });
         if (response.data.success) {
@@ -30,6 +32,7 @@ const Login = () => {
           getUserData()
 
           const verify = await axios.post(backendUrl + "/api/user/send-verify-otp")
+          console.log(verify.data.success);
           
         } else {
           toast.error(response.error.msg);
@@ -86,6 +89,14 @@ const Login = () => {
         type="email"
         className="w-full px-3 py-2 border border-gray-800"
         placeholder="Email"
+        required
+      />
+
+      <input
+        onChange={(e) => setPhoneNumber(e.target.value)}
+        type="number"
+        className="w-full px-3 py-2 border border-gray-800"
+        placeholder="Phone Number"
         required
       />
       <input

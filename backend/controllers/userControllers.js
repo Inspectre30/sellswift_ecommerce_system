@@ -52,8 +52,8 @@ const loginUser = async (req, res) => {
 
 //route for register
 const registerUser = async (req, res) => {
-  const { name, email, password, role = "customer" } = req.body;
-  if (!name || !email || !password) {
+  const { name, email, password, role = "customer",phoneNumber } = req.body;
+  if (!name || !email || !password || !phoneNumber) {
     return res.json({ success: false, msg: "Missing Details!" });
   }
   try {
@@ -82,6 +82,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      phone: phoneNumber,
       role,
     });
 
