@@ -125,35 +125,39 @@ const ShopContextProvider = (props) => {
   };
   const getUserData = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/user/get-user')
-      response.data.success ? setUserData(response.data) : toast.error(response.data.msg)
+      const {data} = await axios.get(backendUrl + '/api/profile/get-user')
+      data.success ? setUserData(data.userData) : toast.error(data.msg)
+     
+    
     } catch (error) {
       toast.error(error.message)
     }
   }
-  // const getAuthState = async () => {
-  //   try {
-  //     const response = await axios.get(backendUrl + '/api/user/is-auth')
+  const getAuthState = async () => {
+    try {
+      const response = await axios.get(backendUrl + '/api/user/is-auth')
 
-  //     if(response.data.success) {
-  //       console.log(response.data);
-  //     }
-  //   } catch (error) {
-  //     console.log(error.message)
-  //   }
-  // }
+      if(response.data.success) {
+        setIsLoggedIn(true)
+        getUserData();
+        
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
   
 
   useEffect(() => {
     getProductsData();
+    getAuthState();
+  
   }, []);
-  // useEffect(() => {
-  //   getAuthState()
-  // },[])
+ 
+ 
 
-  //   useEffect(() => {
-  //     console.log(cartItems);
-  //   }, [cartItems]);
+ 
   const value = {
     products,
     currency,

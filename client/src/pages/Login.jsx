@@ -3,7 +3,7 @@ import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link, replace } from "react-router-dom";
-//3:36:07
+
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
   const { navigate, backendUrl, getUserData, setIsLoggedIn} = useContext(ShopContext);
@@ -26,11 +26,15 @@ const Login = () => {
         
         });
         if (response.data.success) {
-          setIsLoggedIn(true);
+         
           navigate("/verify-email", { replace: true });
             const verify = await axios.post(
             backendUrl + "/api/user/send-verify-otp"
           );
+          getUserData();
+          setIsLoggedIn(true)
+          
+         
           toast.success(verify.data.msg);
         } else {
           toast.error(response.error.msg);
@@ -41,7 +45,9 @@ const Login = () => {
           password,
         });
         if (response.data.success) {
+          getUserData();
           setIsLoggedIn(true);
+          navigate('/')
         } else {
           toast.error(response.data.msg);
         }

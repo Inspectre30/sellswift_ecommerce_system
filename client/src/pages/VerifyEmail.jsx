@@ -2,13 +2,11 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 import axios from "axios";
-//CURRENT TIMESTAMP 4:37:51
 
-//START AGAIN THE PROCESS FROM LOGIN(3:29:20), LOGOUT, VERIFY EMAIL
 const EmailVerifyOtp = () => {
   axios.defaults.withCredentials = true;
   const [otp, setOtp] = useState(Array(6).fill(""));
-  const { backendUrl, userData, getUserData, navigate } = useContext(ShopContext);
+  const { backendUrl, userData, getUserData, navigate,isLoggedIn,setIsLoggedIn} = useContext(ShopContext);
   const inputRefs = useRef([]);
 
   
@@ -59,6 +57,8 @@ const EmailVerifyOtp = () => {
       });
 
       if(data.success) {
+        getUserData();
+        setIsLoggedIn(true)
         toast.success(data.msg)
         navigate('/')
       }else {
@@ -68,9 +68,11 @@ const EmailVerifyOtp = () => {
       toast.error(error.message)
     }
   };
-  useEffect(() => {
-
-  },[])
+  useEffect(()=> {
+  
+    userData && userData.isAccountVerified && navigate('/')
+      
+  },[userData])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-300 to-blue-200">

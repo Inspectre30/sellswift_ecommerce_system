@@ -1,37 +1,37 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { assets } from "../assets/assets/frontend_assets/assets";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 import axios from "axios";
-//In this part once the user register it should automatically render the dropdown menu
-//to achieve this you should base the current state of the isAccountVerified = true props
+
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const {
     setShowSearch,
     getCartCount,
     navigate,
-    token,
-    setToken,
+    // token,
+    // setToken,
     setCartItems,
     setIsLoggedIn,
     setUserData,
-    getUserData,
     userData,
+    backendUrl,
   } = useContext(ShopContext);
 
   const logout = async () => {
-   try {
-    axios.defaults.withCredentials = true
-    const response = await axios.post(backendUrl + '/api/user/logout')
-    response.data.success && setIsLoggedIn(false)
-    response.data.success && setUserData(false)
-    
-   } catch (error) {
-    toast.error(error.message)
-   }
+    try {
+      axios.defaults.withCredentials = true;
+      const response = await axios.post(backendUrl + "/api/user/logout");
+      response.data.success && setIsLoggedIn(false);
+      response.data.success && setUserData(false);
+      navigate("/login");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
+
   return (
     <div className="flex items-center justify-between py-5">
       <Link to="/">
@@ -64,19 +64,34 @@ const Navbar = () => {
 
         <div className="group relative">
           <img
-            onClick={() => (token ? null : navigate("/login"))}
+            onClick={() => (userData ? null : navigate("/login"))}
             src={assets.profile_icon}
             className="w-5 cursor-pointer"
             alt=""
           />
 
           {/* dropdown menu  */}
-          {token && (
+          {userData.isAccountVerified && (
             <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
               <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                <p onClick={() => navigate('/profile')} className="cursor-pointer hover:text-black">My Profile</p>
-                <p onClick={() =>navigate('/orders')} className="cursor-pointer hover:text-black">Orders</p>
-                <p onClick={() =>navigate('/messages')} className="cursor-pointer hover:text-black">Messages</p>
+                <p
+                  onClick={() => navigate("/profile")}
+                  className="cursor-pointer hover:text-black"
+                >
+                  My Profile
+                </p>
+                <p
+                  onClick={() => navigate("/orders")}
+                  className="cursor-pointer hover:text-black"
+                >
+                  Orders
+                </p>
+                <p
+                  onClick={() => navigate("/messages")}
+                  className="cursor-pointer hover:text-black"
+                >
+                  Messages
+                </p>
                 <p onClick={logout} className="cursor-pointer hover:text-black">
                   Logout
                 </p>
