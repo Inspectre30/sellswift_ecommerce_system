@@ -3,15 +3,14 @@ import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Link, replace } from "react-router-dom";
-//CONTINUE 3:47:25
+//3:36:07
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login");
-  const { navigate, backendUrl, setIsLoggedIn, getUserData} = useContext(ShopContext);
+  const { navigate, backendUrl, getUserData, setIsLoggedIn} = useContext(ShopContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("")
+  const [phoneNumber, setPhoneNumber] = useState("");
 
   const onSubmitHandler = async (event) => {
     try {
@@ -24,16 +23,15 @@ const Login = () => {
           email,
           password,
           phoneNumber,
-          role,
+        
         });
         if (response.data.success) {
-          setCurrentState("Login");
-          navigate("/verify-email", {replace:true});
-          getUserData()
-
-          const verify = await axios.post(backendUrl + "/api/user/send-verify-otp")
-          console.log(verify.data.success);
-          
+          setIsLoggedIn(true);
+          navigate("/verify-email", { replace: true });
+            const verify = await axios.post(
+            backendUrl + "/api/user/send-verify-otp"
+          );
+          toast.success(verify.data.msg);
         } else {
           toast.error(response.error.msg);
         }
@@ -44,8 +42,6 @@ const Login = () => {
         });
         if (response.data.success) {
           setIsLoggedIn(true);
-     
-         
         } else {
           toast.error(response.data.msg);
         }
@@ -55,8 +51,6 @@ const Login = () => {
       toast.error(error.message);
     }
   };
-
- 
 
   return (
     <form
@@ -70,14 +64,24 @@ const Login = () => {
       {currentState === "Login" ? (
         ""
       ) : (
-        <input
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          type="text"
-          className="w-full px-3 py-2 border border-gray-800"
-          placeholder="Name"
-          required
-        />
+        <div>
+          <input
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            type="text"
+            className="w-full px-3 py-2 border border-gray-800 mb-4"
+            placeholder="Name"
+            required
+          />
+          <input
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            value={phoneNumber}
+            type="text"
+            className="w-full px-3 py-2 border border-gray-800"
+            placeholder="Phone Number"
+            required
+          />
+        </div>
       )}
 
       <input
@@ -89,31 +93,13 @@ const Login = () => {
       />
 
       <input
-        onChange={(e) => setPhoneNumber(e.target.value)}
-        type="number"
-        className="w-full px-3 py-2 border border-gray-800"
-        placeholder="Phone Number"
-        required
-      />
-      <input
         onChange={(e) => setPassword(e.target.value)}
         type="password"
         className="w-full px-3 py-2 border border-gray-800"
         placeholder="Password"
         required
       />
-      {currentState === "Sign Up" && (
-        <div className="flex flex-col items-center">
-          <p className="mb-2">Select a role</p>
-          <select
-            onChange={(e) => setRole(e.target.value.toLowerCase())}
-            className="w-full px-3 py-2 bg-slate-100 rounded-sm"
-          >
-            <option value="Seller">Seller</option>
-            <option value="Customer">Customer</option>
-          </select>
-        </div>
-      )}
+   
       <div className="w-full flex justify-between text-sm mt-[8px]">
         <Link to="/reset-password">
           <p className="cursor-pointer">Forgot your password?</p>

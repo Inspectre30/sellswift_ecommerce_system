@@ -2,6 +2,10 @@ import React, { useContext, useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import { assets } from "../assets/assets/frontend_assets/assets";
 import { ShopContext } from "../context/ShopContext";
+import { toast } from "react-toastify";
+import axios from "axios";
+//In this part once the user register it should automatically render the dropdown menu
+//to achieve this you should base the current state of the isAccountVerified = true props
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const {
@@ -11,10 +15,22 @@ const Navbar = () => {
     token,
     setToken,
     setCartItems,
+    setIsLoggedIn,
+    setUserData,
+    getUserData,
+    userData,
   } = useContext(ShopContext);
 
-  const logout = () => {
-   
+  const logout = async () => {
+   try {
+    axios.defaults.withCredentials = true
+    const response = await axios.post(backendUrl + '/api/user/logout')
+    response.data.success && setIsLoggedIn(false)
+    response.data.success && setUserData(false)
+    
+   } catch (error) {
+    toast.error(error.message)
+   }
   };
   return (
     <div className="flex items-center justify-between py-5">

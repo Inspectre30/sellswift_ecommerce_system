@@ -12,8 +12,8 @@ const ShopContextProvider = (props) => {
   const [showSearch, setShowSearch] = useState(true);
   const [cartItems, setCartItems] = useState({});
   const [products, setProducts] = useState([]);
-  const [token, setToken] = useState('');
-  // const [isLoggedin, setIsLoggedIn] = useState(false);
+  // const [token, setToken] = useState('');
+  const [isLoggedin, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(false);
   const navigate = useNavigate();
   const addToCart = async (itemId, size) => {
@@ -128,24 +128,28 @@ const ShopContextProvider = (props) => {
       const response = await axios.get(backendUrl + '/api/user/get-user')
       response.data.success ? setUserData(response.data) : toast.error(response.data.msg)
     } catch (error) {
-      
+      toast.error(error.message)
     }
   }
-  const getAuthState = async () => {
-    try {
-      const response = await axios.get(backendUrl + '/api/user/is-auth')
-    } catch (error) {
-      
-    }
-  }
+  // const getAuthState = async () => {
+  //   try {
+  //     const response = await axios.get(backendUrl + '/api/user/is-auth')
+
+  //     if(response.data.success) {
+  //       console.log(response.data);
+  //     }
+  //   } catch (error) {
+  //     console.log(error.message)
+  //   }
+  // }
   
 
   useEffect(() => {
     getProductsData();
   }, []);
-  useEffect(() => {
-   
-  })
+  // useEffect(() => {
+  //   getAuthState()
+  // },[])
 
   //   useEffect(() => {
   //     console.log(cartItems);
@@ -166,8 +170,8 @@ const ShopContextProvider = (props) => {
     navigate,
     backendUrl,
     setCartItems,
-    token, setToken,
-    // isLoggedin,setIsLoggedIn,
+    // token, setToken,
+    isLoggedin,setIsLoggedIn,
     userData, setUserData, getUserData
   };
 
