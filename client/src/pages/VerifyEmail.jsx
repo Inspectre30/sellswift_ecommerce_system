@@ -2,7 +2,7 @@ import { useContext, useState, useRef, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 import axios from "axios";
-
+//4:38:28
 const EmailVerifyOtp = () => {
   axios.defaults.withCredentials = true;
   const [otp, setOtp] = useState(Array(6).fill(""));

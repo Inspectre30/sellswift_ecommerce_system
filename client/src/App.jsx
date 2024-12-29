@@ -19,6 +19,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ResetPassword from "./pages/ResetPassword";
+import ResetPasswordForms from "./pages/ResetPassword";
 const App = () => {
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
@@ -38,6 +39,7 @@ const App = () => {
         <Route path='/messages' element={<Messages />}/>
         <Route path='/reset-password' element={<ResetPassword />}/>
         <Route path='/verify-email' element={<VerifyEmail />}/>
+        <Route path='/reset-password' element={<ResetPasswordForms />}/>
       
         
       </Routes>
