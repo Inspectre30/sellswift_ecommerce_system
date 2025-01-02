@@ -1,29 +1,46 @@
 import userModel from "../models/userModel.js";
 import fs from "fs";
 import path from "path";
-import {v2 as cloudinary} from "cloudinary";
+import { v2 as cloudinary } from "cloudinary";
+import jwt from "jsonwebtoken";
 
 
-// Controller for updating user profile, including avatar upload
- const updateUserProfile = async (req, res) => {
+
+const updateUserProfile = async (req, res) => {
   try {
-    // const userId = req.user._id; // Assume req.user.id is set by authentication middleware
-    const {userId, name, email, phone, address } = req.body; // Optional fields for user profile update
+    console.log("Request body:", req.body);
+    console.log("Uploaded file:", req.file);
+    const { name, email, phone, address, zipcode, street } = req.body;
+    const token = req.cookies.token;
 
-    // Variable to hold avatar URL
+    // Check if token exists
+    if (!token) {
+      return res.status(400).json({ success: false, message: "Token is required." });
+    }
+
+    // Decode the token to extract user ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: "Invalid token." });
+    }
+
     let avatarUrl = null;
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: "No file uploaded. Please provide your profile image." });
+    }
 
-    // Check if an avatar was uploaded
+    // Upload to Cloudinary if a file is provided
     if (req.file) {
-      // Upload the image to Cloudinary
       const result = await cloudinary.uploader.upload(req.file.path);
       avatarUrl = result.secure_url; // Get the secure URL of the uploaded image
-      console.log(result)
+      console.log(result);
 
-      // Optionally, delete the local file after uploading to Cloudinary
+      // Remove the file from local uploads
       fs.unlinkSync(req.file.path);
     }
-    console.log(userId)
 
     // Find and update the user
     const updatedUser = await userModel.findByIdAndUpdate(
@@ -34,6 +51,8 @@ import {v2 as cloudinary} from "cloudinary";
         phone: phone || undefined,
         address: address || undefined,
         avatar: avatarUrl || undefined, // Set avatar URL from Cloudinary
+        zipcode: zipcode || undefined,
+        street: street || undefined,
       },
       { new: true, omitUndefined: true } // Return the updated document and ignore undefined values
     );
@@ -52,28 +71,46 @@ import {v2 as cloudinary} from "cloudinary";
         phone: updatedUser.phone,
         address: updatedUser.address,
         avatar: updatedUser.avatar,
+        zipcode: updatedUser.zipcode,
+        street: updatedUser.street,
       },
     });
   } catch (error) {
     console.error(error.message);
-    res.status(500).json({ success: false, msg: "Profile update failed." });
-  }
-};
-const getUserProfile = async (req, res) => {
-  try {
-    const {userId}= req.body; // Assuming user ID is set by authentication middleware
-    const user = await userModel.findById(userId); // Exclude password field
-   
-    if (!user) {
-      return res.json({success: false, msg: "User not found" });
+    if (error.name === "JsonWebTokenError") {
+      return res.status(400).json({ success: false, message: "Invalid token." });
     }
-    
-    res.json({success:true, userData:{name: user.name, email: user.email, isAccountVerified: user.isAccountVerified} });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ success: false, msg: "Failed to retrieve user profile." });
+    res.status(500).json({ success: false, message: "Profile update failed." });
   }
 };
 
-export { updateUserProfile, getUserProfile }; // Export both functions
-//try this and try to fetch from the frontend using axios
+const getUserProfile = async (req, res) => {
+  try {
+    const { userId } = req.body; // Assuming user ID is set by authentication middleware
+    const user = await userModel.findById(userId); // Exclude password field
+
+    if (!user) {
+      return res.json({ success: false, msg: "User not found" });
+    }
+
+    res.json({
+      success: true,
+      userData: {
+        name: user.name,
+        email: user.email,
+        isAccountVerified: user.isAccountVerified,
+        phone: user.phone,
+        address: user.address,
+        street: user.street,
+        zipcode: user.zipcode,
+      },
+    });
+  } catch (error) {
+    console.error(error.message);
+    res
+      .status(500)
+      .json({ success: false, msg: "Failed to retrieve user profile." });
+  }
+};
+
+export { updateUserProfile, getUserProfile };

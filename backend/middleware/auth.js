@@ -10,6 +10,7 @@ const authUser = async (req, res, next) => {
 
     if (token_decode) {
       req.body.userId = token_decode.id;
+      console.log(token);
     } else {
       return res.json({
         success: false,

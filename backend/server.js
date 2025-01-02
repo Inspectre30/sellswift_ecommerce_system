@@ -9,7 +9,6 @@ import adminRouter from "./routes/adminRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import cookieParser from "cookie-parser";
-
 import profileRouter from "./routes/updateProfileRoute.js";
 const app = express();
 // eslint-disable-next-line no-undef
@@ -22,6 +21,7 @@ const allowedOrigins = ['http://localhost:5173','http://localhost:5174','http://
 app.use(express.json());
 app.use(cors({origin: allowedOrigins,credentials: true}));
 app.use(cookieParser())
+express.urlencoded({ extended: true })
 
 //api-endpoints
 app.use("/api/user", userRouter);
@@ -36,3 +36,4 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
+

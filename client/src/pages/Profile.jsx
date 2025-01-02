@@ -3,89 +3,81 @@ import { assets } from "../assets/assets/frontend_assets/assets";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+//FIND A WAY TO MAKE THE ENDPOINT ACTIVATED IT SEEMS THAT THE BACKEND DOESN'T RECOGNIZE THE COOKIE BEING PASSED FROM THE BROWSER
+//DEBUG AND LOG REQ.BODY AND REQ.FILE
 const Profile = () => {
-  // const { backendUrl, token } = useContext(ShopContext);
-  // const [userData, setUserData] = useState({
-  //   name: "",
-  //   email: "",
-  //   phone: "",
-  //   address: "",
-  //   avatar: "", // Cloudinary image URL
-  // });
-  // const [file, setFile] = useState(null);
+  const { userData, backendUrl } = useContext(ShopContext);
+  const [formData, setFormData] = useState({
+    name: userData.name || "",
+    email: userData.email || "",
+    phone: userData.phone || "",
+    address: userData.address || "",
+    street: userData.street || "",
+    zipcode: userData.zipcode || "",
+    avatar: userData.avatar || ""
+  });
+  const [avatarFile, setAvatarFile] = useState(null);
 
-  // useEffect(() => {
-  //   // Fetch user data on component mount
-  //   const fetchUserData = async () => {
-  //     try {
-  //       // or wherever you're storing the JWT tokenF
-  //       const response = await axios.get(backendUrl + '/api/profile/get', {headers: {token}}); // Adjust to your API endpoint
-        
-  //       console.log(response.data.user);
-      
-  //     } catch (error) {
-  //       toast.error(error.message);
-  //       console.error("Error fetching user data:", error.message);
-  //     }
-  //   };
-  //   fetchUserData();
-  // }, []);
+  useEffect(() => {
+    setFormData({
+      name: userData.name || "",
+      email: userData.email || "",
+      phone: userData.phone || "",
+      address: userData.address || "",
+      street: userData.street || "",
+      zipcode: userData.zipcode || "",
+      avatar: userData.avatar || ""
+    });
+  }, [userData]);
 
-  // // Handle input change
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setUserData({ ...userData, [name]: value });
-  //   console.log(value);
-  // };
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  // // Handle file selection for avatar
-  // const handleFileChange = (e) => {
-  //   setFile(e.target.files[0]);
-  // };
+  const handleFileChange = (e) => {
+    setAvatarFile(e.target.files[0]);
+  };
 
-  // // Submit profile updates
-  // const handleUpdate = async (e) => {
-  //   e.preventDefault();
-  //   const formData = new FormData();
-  //   formData.append("name", userData.name);
-  //   formData.append("email", userData.email);
-  //   formData.append("phone", userData.phone);
-  //   formData.append("address", userData.address);
-  //   if (file) formData.append("avatar", file); // Append file if selected
+  const profileUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      axios.defaults.withCredentials = true;
+      const formDataToSend = new FormData();
+      for (const key in formData) {
+        formDataToSend.append(key, formData[key]);
+      }
+      if (avatarFile) {
+        formDataToSend.append("avatar", avatarFile);
+      }
 
-  //   try {
-  //     const response = await axios.patch(
-  //       backendUrl + "/api/profile/update",
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //         Authorization: `Bearer ${token}`,
-  //       }
-  //     );
-  //     toast.success("Profile updated successfully!");
-  //     setUserData(response.data.user); // Update profile display
-  //   } catch (error) {
-  //     console.error("Error updating profile:", error.message);
-  //     toast.error("Failed to update profile.");
-  //   }
-  // };
-  const {userData} = useContext(ShopContext);
+      const response = await axios.put(backendUrl + "/api/profile/profile-update", formDataToSend,{
+        headers: {"Content-Type": "multipart/form-data"}
+      });
+      if(response.data.success) {
+        toast.success("Profile updated successfully!");
+      }else {
+        toast.error(response.data.message)
+      }
+    
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center min-h-screen py-10">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">
-        Your Profile
-      </h1>
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Your Profile</h1>
       <form
-        // onSubmit={handleUpdate}
+        onSubmit={profileUpdate}
         className="w-full max-w-md space-y-4 flex flex-col items-center"
       >
         {/* Avatar upload section */}
         <div className="relative mb-4">
           <img
-            src={assets.profile_icon} // Use the avatar if available
+            src={avatarFile ? URL.createObjectURL(avatarFile) : formData.avatar || assets.profile_icon}
             alt="Profile"
             className="w-36 h-36 rounded-full border-4 border-black cursor-pointer hover:opacity-80"
             onClick={() => document.getElementById("fileInput").click()}
@@ -94,11 +86,11 @@ const Profile = () => {
             type="file"
             id="fileInput"
             className="hidden"
-            //onChange={handleFileChange} // Bind the file change handler
+            onChange={handleFileChange}
           />
           <div
             className="absolute bottom-3 left-24 bg-black text-white p-2 rounded-full cursor-pointer hover:bg-indigo-600 transition"
-            //onClick={() => document.getElementById("fileInput").click()}
+            onClick={() => document.getElementById("fileInput").click()}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -125,11 +117,10 @@ const Profile = () => {
             </label>
             <input
               type="text"
-              name="name" // Bind name to userData
-              value={userData.name} // Use state value
-              //onChange={handleChange} // Bind the change handler
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
-              
             />
           </div>
 
@@ -139,9 +130,9 @@ const Profile = () => {
             </label>
             <input
               type="email"
-              name="email" // Bind email to userData
-              value={userData.email} // Use state value
-              //onChange={handleChange} // Bind the change handler
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -152,9 +143,9 @@ const Profile = () => {
             </label>
             <input
               type="number"
-              name="phone" // Bind phone to userData
-              value={userData.phone} // Use state value
-              //onChange={handleChange} // Bind the change handler
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -165,9 +156,35 @@ const Profile = () => {
             </label>
             <input
               type="text"
-              name="address" // Bind address to userData
-              value={userData.address} // Use state value
-              //onChange={handleChange} // Bind the change handler
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Street
+            </label>
+            <input
+              type="text"
+              name="street"
+              value={formData.street}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Zip Code
+            </label>
+            <input
+              type="text"
+              name="zipcode"
+              value={formData.zipcode}
+              onChange={handleChange}
               className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-indigo-500"
             />
           </div>
