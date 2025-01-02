@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     avatar: { type: String },
     phone: { type: String },
     address: { type: String },
-    zipCode: {type: String},
+    zipcode: {type: String},
     street: {type: String},
     status: { type: String, enum: ["active", "banned"], default: "active" },
     lastLoginAt: { type: Date },

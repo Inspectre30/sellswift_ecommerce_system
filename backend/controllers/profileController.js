@@ -1,15 +1,12 @@
 import userModel from "../models/userModel.js";
 import fs from "fs";
-import path from "path";
 import { v2 as cloudinary } from "cloudinary";
 import jwt from "jsonwebtoken";
-
-
 
 const updateUserProfile = async (req, res) => {
   try {
     console.log("Request body:", req.body);
-    console.log("Uploaded file:", req.file);
+
     const { name, email, phone, address, zipcode, street } = req.body;
     const token = req.cookies.token;
 
@@ -28,10 +25,6 @@ const updateUserProfile = async (req, res) => {
     }
 
     let avatarUrl = null;
-    if (!req.file) {
-      return res.status(400).json({ success: false, message: "No file uploaded. Please provide your profile image." });
-    }
-
     // Upload to Cloudinary if a file is provided
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
@@ -86,8 +79,8 @@ const updateUserProfile = async (req, res) => {
 
 const getUserProfile = async (req, res) => {
   try {
-    const { userId } = req.body; // Assuming user ID is set by authentication middleware
-    const user = await userModel.findById(userId); // Exclude password field
+    const { userId } = req.body; 
+    const user = await userModel.findById(userId); 
 
     if (!user) {
       return res.json({ success: false, msg: "User not found" });

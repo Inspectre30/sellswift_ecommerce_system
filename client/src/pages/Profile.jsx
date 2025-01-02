@@ -3,10 +3,9 @@ import { assets } from "../assets/assets/frontend_assets/assets";
 import { ShopContext } from "../context/ShopContext";
 import axios from "axios";
 import { toast } from "react-toastify";
-//FIND A WAY TO MAKE THE ENDPOINT ACTIVATED IT SEEMS THAT THE BACKEND DOESN'T RECOGNIZE THE COOKIE BEING PASSED FROM THE BROWSER
-//DEBUG AND LOG REQ.BODY AND REQ.FILE
+//NOW DO THE getUserData() everytime this component render to fetch the latest userData
 const Profile = () => {
-  const { userData, backendUrl } = useContext(ShopContext);
+  const { userData, backendUrl,getUser } = useContext(ShopContext);
   const [formData, setFormData] = useState({
     name: userData.name || "",
     email: userData.email || "",
