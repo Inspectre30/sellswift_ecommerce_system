@@ -7,7 +7,7 @@ const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
-//1:44:02
+
 //ALWAYS CHECK WHICH BRANCH YOU ARE IN(AUTH-FEATURE)
 
 //Route for user login
