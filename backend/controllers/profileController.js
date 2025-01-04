@@ -97,6 +97,7 @@ const getUserProfile = async (req, res) => {
         address: user.address,
         street: user.street,
         zipcode: user.zipcode,
+        avatar: user.avatar
       },
     });
   } catch (error) {

@@ -35,14 +35,16 @@ const ShopContextProvider = (props) => {
       cartData[itemId][size] = 1;
     }
     setCartItems(cartData);
-    if(token) {
+    if (token) {
       try {
-        await axios.post(backendUrl + '/api/cart/add',{itemId,size}, {headers: {token}})
-        
+        await axios.post(
+          backendUrl + "/api/cart/add",
+          { itemId, size },
+          { headers: { token } }
+        );
       } catch (error) {
-        console.log(error) 
-        toast.error(error.mesage)
-        
+        console.log(error);
+        toast.error(error.mesage);
       }
     }
   };
@@ -59,7 +61,7 @@ const ShopContextProvider = (props) => {
           }
         } catch (error) {
           console.log(error);
-          toast.error(error.message)
+          toast.error(error.message);
         }
       }
     }
@@ -70,29 +72,35 @@ const ShopContextProvider = (props) => {
     let cartData = structuredClone(cartItems);
     cartData[itemId][size] = quantity;
     setCartItems(cartData);
-    if(token) {
+    if (token) {
       try {
-        await axios.post(backendUrl + '/api/cart/update',{itemId, size, quantity}, {headers: {token}})
+        await axios.post(
+          backendUrl + "/api/cart/update",
+          { itemId, size, quantity },
+          { headers: { token } }
+        );
       } catch (error) {
         console.log(error);
-        toast.error(error.message)
+        toast.error(error.message);
       }
     }
   };
 
   const getUserCart = async (token) => {
-      try {
-        const response = await axios.post(backendUrl + "/api/cart/get",{},{headers:{token}})
-        if(response.data.success) {
-          setCartItems(response.data.cartData)
-        }
-        
-      } catch (error) {
-        console.log(error);
-        toast.error(error.message)
+    try {
+      const response = await axios.post(
+        backendUrl + "/api/cart/get",
+        {},
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        setCartItems(response.data.cartData);
       }
-  }
-
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+  };
 
   const getCartAmount = () => {
     let totalAmount = 0;
@@ -113,52 +121,53 @@ const ShopContextProvider = (props) => {
   const getProductsData = async () => {
     try {
       const response = await axios.get(backendUrl + "/api/product/list");
-      if(response.data.success) {
-        setProducts(response.data.products)
-      }else{
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
         toast.error(response.data.msg);
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
   const getUserData = async () => {
     try {
-      const {data} = await axios.get(backendUrl + '/api/profile/get-user')
-      data.success ? setUserData(data.userData) : toast.error(data.msg)
-     
-    
+      const { data } = await axios.get(backendUrl + "/api/profile/get-user");
+      data.success ? setUserData(data.userData) : toast.error(data.msg);
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
   const getAuthState = async () => {
     try {
-      const response = await axios.get(backendUrl + '/api/user/is-auth')
+      axios.defaults.withCredentials = true
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("token="))
+        ?.split("=")[1];
+      if (!token) {
+        setIsLoggedIn(false);
+      } // No token found, user is not logged in return; }
 
-      if(response.data.success) {
-        setIsLoggedIn(true)
+      const response = await axios.get(backendUrl + "/api/user/is-auth");
+
+      if (response.data.success) {
+        setIsLoggedIn(true);
         getUserData();
-        
+      } else {
+        setIsLoggedIn(false);
       }
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
-
-
-  
+  };
 
   useEffect(() => {
     getProductsData();
     getAuthState();
-  
   }, []);
- 
- 
 
- 
   const value = {
     products,
     currency,
@@ -176,8 +185,11 @@ const ShopContextProvider = (props) => {
     backendUrl,
     setCartItems,
     // token, setToken,
-    isLoggedin,setIsLoggedIn,
-    userData, setUserData, getUserData
+    isLoggedin,
+    setIsLoggedIn,
+    userData,
+    setUserData,
+    getUserData,
   };
 
   return (
