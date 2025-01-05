@@ -20,7 +20,7 @@ const Profile = () => {
 
  
   useEffect(() => {
-    console.log(userData)
+    // console.log(userData)
     setFormData({
       name: userData.name || "",
       email: userData.email || "",
@@ -30,7 +30,7 @@ const Profile = () => {
       zipcode: userData.zipcode || "",
       avatar: userData.avatar || assets.profile_icon, 
     });
-    console.log("Updated formData after setting:", formData);
+    // console.log("Updated formData after setting:", formData);
   }, [userData]);
 
   // Handle file input change

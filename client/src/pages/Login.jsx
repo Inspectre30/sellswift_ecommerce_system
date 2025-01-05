@@ -46,7 +46,7 @@ const Login = () => {
           setIsLoggedIn(true);
           toast.success(verify.data.msg);
         } else {
-          toast.error(response.error.msg);
+          toast.error(response.data.msg);
         }
       } else {
         const response = await axios.post(backendUrl + "/api/user/login", {
