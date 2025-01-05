@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 const updateUserProfile = async (req, res) => {
   try {
-    console.log("Request body:", req.body);
+    // console.log("Request body:", req.body);
 
     const { name, email, phone, address, zipcode, street } = req.body;
     const token = req.cookies.token;
@@ -28,8 +28,8 @@ const updateUserProfile = async (req, res) => {
     // Upload to Cloudinary if a file is provided
     if (req.file) {
       const result = await cloudinary.uploader.upload(req.file.path);
-      avatarUrl = result.secure_url; // Get the secure URL of the uploaded image
-      console.log(result);
+      avatarUrl = result.secure_url; // Get the secure URL of the uploaded image    //console.log(result);
+  
 
       // Remove the file from local uploads
       fs.unlinkSync(req.file.path);
