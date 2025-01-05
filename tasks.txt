@@ -1,0 +1,24 @@
+-Continue Github Tutorial: 26:23
+
+
+
+
+    // Send verification email
+    // const transporter = nodemailer.createTransport({
+    //   service: "Gmail",
+    //   auth: {
+    //     user: process.env.ADMIN_EMAIL, // Your email address
+    //     pass: process.env.ADMIN_PASSWORD, // Your email password
+    //   },
+    // });
+
+    // const verificationUrl = `http://sellswift.com/verify-email?token=${verificationToken}`;
+
+    // await transporter.sendMail({
+    //   to: email,
+    //   subject: "Verify Your Email",
+    //   html: `<p>Thank you for registering. Click <a href="${verificationUrl}">here</a> to verify your email.</p>`,
+    // });
+
+
+mailgun pass: Shop&Sell42!
