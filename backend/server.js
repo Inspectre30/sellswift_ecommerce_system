@@ -10,6 +10,7 @@ import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import cookieParser from "cookie-parser";
 import profileRouter from "./routes/updateProfileRoute.js";
+import sellerRouter from "./routes/sellerRoute.js";
 const app = express();
 // eslint-disable-next-line no-undef
 const port = process.env.PORT || 4000;
@@ -30,6 +31,7 @@ app.use("/api/admin", adminRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 app.use("/api/profile", profileRouter);
+app.use("/api/seller", sellerRouter);
 app.get("/", (req, res) => {
   res.send("API WORKING :>");
 });
