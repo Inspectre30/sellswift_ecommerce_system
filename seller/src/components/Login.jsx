@@ -4,7 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-
+import {Link} from 'react-router-dom'
 
 const Login = () => {
   const [currentState, setCurrentState] = useState("Login"); // State for toggling forms
@@ -14,6 +14,7 @@ const Login = () => {
   const [storeName, setStoreName] = useState("");
   const navigate = useNavigate();
   const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const [terms, setTerms] = useState(false); // Added state for terms and conditions
 
   // Phone number validation function
   const validatePhoneNumber = (phoneNumber) => {
@@ -138,8 +139,25 @@ const Login = () => {
               required
             />
           </div>
+
+          {currentState === "SignUp" && (
+            <div className="w-full max-w-md flex items-center mt-4">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={terms}
+                onChange={() => setTerms(!terms)}
+                className="mr-2"
+                required
+              />
+              <label htmlFor="terms">
+                I agree to the <Link to="/terms" className="text-blue-500 underline">terms and conditions</Link>
+              </label>
+            </div>
+          )}
+
           <button
-          disabled={!isPhoneValid}
+          disabled={currentState === "SignUp" && (!isPhoneValid || !terms)}
             className="mt-2 w-full py-2 px-4 rounded-md text-white bg-black"
             type="submit"
           >
@@ -176,80 +194,4 @@ const Login = () => {
 
 export default Login;
 
-// import { useState } from "react";
-// import { backendUrl } from "../App";
-// import axios from "axios";
-// import { toast } from "react-toastify";
-// import { useNavigate } from "react-router-dom";
-// const Login = () => {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const navigate = useNavigate();
-//   const onSubmitHandler = async (e) => {
-//     try {
 
-//       e.preventDefault();
-//       axios.defaults.withCredentials = true
-//       const token = document.cookie
-//         .split("; ")
-//         .find((row) => row.startsWith("token="))
-//         ?.split("=")[1];
-//       if (!token) {
-//         setIsLoggedIn(false);
-//       } // No token found, user is not logged in return; }
-//       const response = await axios.post(backendUrl + "/api/seller/login", {
-//         email,
-//         password,
-//      });
-//      if(response.data.success){
-//       toast.success(response.data.msg)
-//       navigate("/add")
-//      }
-
-//     } catch (error) {
-//       console.log(error);
-//       toast.error(response.data.msg);
-//     }
-//   };
-//   return (
-//     <div className="min-h-screen flex items-center justify-center w-full">
-//       <div className="bg-white shadow-md rounded-lg px-8 py-6 max-w-md">
-//         <h1 className="text-2xl font-bold mb-4">Seller Panel</h1>
-//         <form onSubmit={onSubmitHandler}>
-//           <div className="mb-3 min-w-72">
-//             <p className="text-sm font-medium text-gray-700 mb-2">
-//               Email Address
-//             </p>
-//             <input
-//               onChange={(e) => setEmail(e.target.value)}
-//               value={email}
-//               className="rounded-md w-full px-3 py-2 border border-gray-300 outline-none"
-//               type="email"
-//               placeholder="your@email.com"
-//               required
-//             />
-//           </div>
-//           <div className="mb-3 min-w-72">
-//             <p className="text-sm font-medium text-gray-700 mb-2">Password</p>
-//             <input
-//               onChange={(e) => setPassword(e.target.value)}
-//               value={password}
-//               className="rounded-md w-full px-3 py-2 border border-gray-300 outline-none"
-//               type="password"
-//               placeholder="Enter your password"
-//               required
-//             />
-//           </div>
-//           <button
-//             className="mt-2 w-full py-2 px-4 rounded-md text-white bg-black"
-//             type="submit"
-//           >
-//             Login
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Login;

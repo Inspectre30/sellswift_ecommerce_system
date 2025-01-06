@@ -8,30 +8,18 @@ import { useState, useEffect } from "react";
 import Login from "./components/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
 import EmailVerification from "./pages/EmailVerification";
 import ResetPassword from "./pages/ResetPassword";
+import { toast } from "react-toastify";
+
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const currency = "₱";
 const App = () => {
-  const navigate = useNavigate();
+
   const [auth, setAuth] = useState(false)
   // Check for token in cookies on initial render
-  useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
 
-    if (token) {
-      setAuth(true); // Set authentication to true if token exists
-      console.log(auth)
-    } else {
-      setAuth(false); // Set authentication to false if token does not exist
-      navigate("/login"); // Redirect to login route
-    }
-  }, []);
 
   return (
     <div className="bg-gray-50 min-h-screen ">
@@ -40,7 +28,7 @@ const App = () => {
         <Login />
       ) : (
         <>
-          <Navbar setAuth={setAuth} />
+          <Navbar/>
           <hr />
           <div className="flex w-full">
             <Sidebar />

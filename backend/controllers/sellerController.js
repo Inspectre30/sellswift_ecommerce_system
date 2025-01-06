@@ -175,7 +175,7 @@ const verifyEmail = async (req, res) => {
 //check if seller is authenticated
 const isAuthenticated = async (req, res) => {
   try {
-    return res.json({ success: true });
+    return res.json({ success: true , msg: "You're authenticated successfully "});
   } catch (error) {
     return res.json({ success: false, msg: error.message });
   }
