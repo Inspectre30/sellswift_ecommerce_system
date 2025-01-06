@@ -1,7 +1,23 @@
 import React from "react";
 import { assets } from "../assets/seller_assets/assets";
 
-const Navbar = ({ setAuth }) => {
+const Navbar = () => {
+
+  const logout = async () => {
+    try {
+      axios.defaults.withCredentials = true;
+      const response = await axios.post(backendUrl + "/api/seller/logout");
+
+      if(response.data.success) {
+        navigate("/login");
+      }else {
+        toast.error(response.data.msg)
+      }
+     
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
   return (
     <div className="flex items-center py-2 px-[4%] justify-between">
       <div id="title">
@@ -12,7 +28,8 @@ const Navbar = ({ setAuth }) => {
       </div>
 
       <button
-        onClick={() => setAuth(false)}
+      onClick={logout}
+       
         className="bg-gray-600 text-white px-5 py-2 sm:px-7 sm:py-2 rounded-full text-xs sm:text-sm"
       >
         Logout
