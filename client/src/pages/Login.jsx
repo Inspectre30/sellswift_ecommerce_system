@@ -13,6 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const [terms, setTerms] = useState(false)
 
   // Phone number validation function
   const validatePhoneNumber = (phoneNumber) => {
@@ -80,7 +81,7 @@ const Login = () => {
         ""
       ) : (
         <div className="w-full max-w-md">
-              <input
+          <input
             onChange={(e) => setName(e.target.value)}
             value={name}
             type="text"
@@ -95,7 +96,7 @@ const Login = () => {
             }}
             value={phoneNumber}
             type="text"
-            className={`w-full px-3 py-2 border ${isPhoneValid ? "border-gray-800" : "border-red-500"}`}
+            className={`w-full px-3 py-2 border outline-none ${isPhoneValid ? "border-gray-800" : "border-red-500"}`}
             placeholder="Phone Number"
             required
           />
@@ -123,6 +124,22 @@ const Login = () => {
         />
       </div>
 
+      {currentState === "Sign Up" && (
+        <div className="w-full max-w-md flex items-center mt-4">
+          <input
+            type="checkbox"
+            id="terms"
+            checked={terms}
+            onChange={() => setTerms(!terms)}
+            className="mr-2"
+            required
+          />
+          <label htmlFor="terms">
+            I agree to the <Link to="/terms" className="text-blue-500 underline">terms and conditions</Link>
+          </label>
+        </div>
+      )}
+
       <div className="w-full flex justify-between text-sm mt-[8px] max-w-md">
         <Link to="/reset-password">
           <p className="cursor-pointer">Forgot your password?</p>
@@ -144,7 +161,7 @@ const Login = () => {
         )}
       </div>
       <button
-        disabled={!isPhoneValid && currentState === "Sign Up"}
+        disabled={currentState === "Sign Up" && (!isPhoneValid || !terms)}
         className="bg-black text-white font-light px-8 py-2 mt-4 max-w-md w-full"
       >
         {currentState === "Login" ? "Sign In" : "Sign Up"}
@@ -160,22 +177,25 @@ export default Login;
 // import axios from "axios";
 // import { toast } from "react-toastify";
 // import { Link } from "react-router-dom";
-// import { parsePhoneNumberFromString } from "libphonenumber-js";
+// import { parsePhoneNumberFromString } from 'libphonenumber-js';
+
 // const Login = () => {
 //   const [currentState, setCurrentState] = useState("Login");
-//   const { navigate, backendUrl, getUserData, setIsLoggedIn } =
-//     useContext(ShopContext);
+//   const { navigate, backendUrl, getUserData, setIsLoggedIn } = useContext(ShopContext);
 //   const [name, setName] = useState("");
 //   const [email, setEmail] = useState("");
 //   const [password, setPassword] = useState("");
 //   const [phoneNumber, setPhoneNumber] = useState("");
 //   const [isPhoneValid, setIsPhoneValid] = useState(true);
+ 
+
 //   // Phone number validation function
 //   const validatePhoneNumber = (phoneNumber) => {
 //     if (!phoneNumber) return true;
 //     const phoneNumberObj = parsePhoneNumberFromString(phoneNumber, "PH");
 //     return phoneNumberObj ? phoneNumberObj.isValid() : false;
 //   };
+
 //   const onSubmitHandler = async (event) => {
 //     try {
 //       event.preventDefault();
@@ -186,6 +206,7 @@ export default Login;
 //         toast.error("Invalid phone number. Please enter a valid phone number.");
 //         return;
 //       }
+
 //       if (currentState === "Sign Up") {
 //         const response = await axios.post(backendUrl + "/api/user/register", {
 //           name,
@@ -195,15 +216,12 @@ export default Login;
 //         });
 //         if (response.data.success) {
 //           navigate("/verify-email", { replace: true });
-//           const verify = await axios.post(
-//             backendUrl + "/api/user/send-verify-otp"
-//           );
+//           const verify = await axios.post(`${backendUrl}/api/user/send-verify-otp`);
 //           getUserData();
 //           setIsLoggedIn(true);
-
 //           toast.success(verify.data.msg);
 //         } else {
-//           toast.error(response.error.msg);
+//           toast.error(response.data.msg);
 //         }
 //       } else {
 //         const response = await axios.post(backendUrl + "/api/user/login", {
@@ -236,8 +254,8 @@ export default Login;
 //       {currentState === "Login" ? (
 //         ""
 //       ) : (
-//         <div>
-//           <input
+//         <div className="w-full max-w-md">
+//               <input
 //             onChange={(e) => setName(e.target.value)}
 //             value={name}
 //             type="text"
@@ -245,47 +263,42 @@ export default Login;
 //             placeholder="Name"
 //             required
 //           />
-//           <div>
-//             {" "}
-//             <input
-//               onChange={(e) => {
-//                 setPhoneNumber(e.target.value);
-//                 setIsPhoneValid(validatePhoneNumber(e.target.value));
-//               }}
-//               value={phoneNumber}
-//               type="text"
-//               className={`w-full px-3 py-2 border ${
-//                 isPhoneValid ? "border-gray-800" : "border-red-500"
-//               }`}
-//               placeholder="Phone Number"
-//               required
-//             />{" "}
-//             {!isPhoneValid && (
-//               <p className="text-red-500 text-xs mt-2">
-//                 Please enter a valid number
-//               </p>
-//             )}{" "}
-//           </div>
+//           <input
+//             onChange={(e) => {
+//               setPhoneNumber(e.target.value);
+//               setIsPhoneValid(validatePhoneNumber(e.target.value));
+//             }}
+//             value={phoneNumber}
+//             type="text"
+//             className={`w-full px-3 py-2 border ${isPhoneValid ? "border-gray-800" : "border-red-500"}`}
+//             placeholder="Phone Number"
+//             required
+//           />
+//           {!isPhoneValid && (
+//             <p className="text-red-500 text-xs mt-2">Please enter a valid number</p>
+//           )}
 //         </div>
 //       )}
 
-//       <input
-//         onChange={(e) => setEmail(e.target.value)}
-//         type="email"
-//         className="w-full px-3 py-2 border border-gray-800"
-//         placeholder="Email"
-//         required
-//       />
+//       <div className="w-full max-w-md">
+//         <input
+//           onChange={(e) => setEmail(e.target.value)}
+//           type="email"
+//           className="w-full px-3 py-2 border border-gray-800 mb-4"
+//           placeholder="Email"
+//           required
+//         />
 
-//       <input
-//         onChange={(e) => setPassword(e.target.value)}
-//         type="password"
-//         className="w-full px-3 py-2 border border-gray-800"
-//         placeholder="Password"
-//         required
-//       />
+//         <input
+//           onChange={(e) => setPassword(e.target.value)}
+//           type="password"
+//           className="w-full px-3 py-2 border border-gray-800 mb-4"
+//           placeholder="Password"
+//           required
+//         />
+//       </div>
 
-//       <div className="w-full flex justify-between text-sm mt-[8px]">
+//       <div className="w-full flex justify-between text-sm mt-[8px] max-w-md">
 //         <Link to="/reset-password">
 //           <p className="cursor-pointer">Forgot your password?</p>
 //         </Link>
@@ -306,8 +319,8 @@ export default Login;
 //         )}
 //       </div>
 //       <button
-//         disabled={isPhoneValid}
-//         className="bg-black text-white font-light px-8 py-2 mt-4"
+//         disabled={!isPhoneValid && currentState === "Sign Up"}
+//         className="bg-black text-white font-light px-8 py-2 mt-4 max-w-md w-full"
 //       >
 //         {currentState === "Login" ? "Sign In" : "Sign Up"}
 //       </button>
@@ -316,3 +329,5 @@ export default Login;
 // };
 
 // export default Login;
+
+

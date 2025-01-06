@@ -5,8 +5,8 @@ import { backendUrl } from '../App'
 import { toast } from 'react-toastify'
 
 
-const Add = ({role}) => {
-
+const Add = () => {
+ 
   const [image1, setImage1] = useState(false)
   const [image2, setImage2] = useState(false)
   const [image3, setImage3] = useState(false)
@@ -23,6 +23,8 @@ const Add = ({role}) => {
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
+      axios.defaults.withCredentials = true;
+     
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description)
@@ -37,7 +39,7 @@ const Add = ({role}) => {
       image3  && formData.append("image3", image3);
       image4  && formData.append("image4", image4);
 
-      const response = await axios.post(backendUrl+'/api/product/add',formData,{headers:{role}})
+      const response = await axios.post(backendUrl+'/api/seller/add',formData,{headers: {"Content-Type": "multipart/form-data"},withCredentials: true})
 
       if(response.data.success) {
         toast.success(response.data.msg);
@@ -55,8 +57,8 @@ const Add = ({role}) => {
      
       
     } catch (error) {
-      console.log(error)
-      toast.error(error)
+      console.log(error.message)
+      toast.error(error.message)
       
     }
   }

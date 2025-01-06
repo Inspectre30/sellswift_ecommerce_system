@@ -1,8 +1,7 @@
+
 import { v2 as cloudinary } from "cloudinary";
 import productModel from "../models/productModels.js";
-//function for adding product
-//FIX THIS THAT EACH PRODUCT WILL BE STORED FOR INDIVIDUAL SELLERS
-//READ ABOUT HOW mongoose.Schema.Types.ObjectId works
+
 const addProduct = async (req, res) => {
   try {
     const {
