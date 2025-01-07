@@ -1,18 +1,17 @@
-import { useState } from "react";
-import { backendUrl } from "../App";
+import { useContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
+import { SellerContext } from "../context/SellerContext";
 
 const Login = () => {
+  const { navigate, setAuth, backendUrl,setShowResetPassword,setShowEmailVerification} = useContext(SellerContext);
   const [currentState, setCurrentState] = useState("Login"); // State for toggling forms
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [storeName, setStoreName] = useState("");
-  const navigate = useNavigate();
   const [isPhoneValid, setIsPhoneValid] = useState(true);
   const [terms, setTerms] = useState(false); // Added state for terms and conditions
 
@@ -42,9 +41,10 @@ const Login = () => {
 
         if (response.data.success) {
           toast.success(response.data.msg);
+          setAuth(true);
           navigate("/add");
         } else {
-          toast.error(response.data.msg);
+          toast.error(response.data.message);
         }
       } else if (currentState === "SignUp") {
         const response = await axios.post(backendUrl + "/api/seller/register", {
@@ -55,9 +55,16 @@ const Login = () => {
         });
 
         if (response.data.success) {
-          navigate("/verify-email", { replace: true });
-          toast.success(response.data.msg);
-        
+          setShowEmailVerification(true)
+          
+          const response = await axios.post(
+            backendUrl + "/api/seller/send-verify-otp"
+          );
+          if (response.data.success) {
+            toast.success(response.data.msg);
+          } else {
+            toast.error(response.data.msg);
+          }
         } else {
           toast.error(response.data.msg);
         }
@@ -112,19 +119,23 @@ const Login = () => {
                   Phone Number
                 </p>
                 <input
-            onChange={(e) => {
-              setPhoneNumber(e.target.value);
-              setIsPhoneValid(validatePhoneNumber(e.target.value));
-            }}
-            value={phoneNumber}
-            type="text"
-            className={`w-full px-3 py-2 border outline-none ${isPhoneValid ? "border-gray-300" : "border-red-500"}`}
-            placeholder="Phone Number"
-            required
-          />
-          {!isPhoneValid && (
-            <p className="text-red-500 text-xs mt-2">Please enter a valid phone number</p>
-          )}
+                  onChange={(e) => {
+                    setPhoneNumber(e.target.value);
+                    setIsPhoneValid(validatePhoneNumber(e.target.value));
+                  }}
+                  value={phoneNumber}
+                  type="text"
+                  className={`w-full px-3 py-2 border outline-none ${
+                    isPhoneValid ? "border-gray-300" : "border-red-500"
+                  }`}
+                  placeholder="Phone Number"
+                  required
+                />
+                {!isPhoneValid && (
+                  <p className="text-red-500 text-xs mt-2">
+                    Please enter a valid phone number
+                  </p>
+                )}
               </div>
             </>
           )}
@@ -151,13 +162,16 @@ const Login = () => {
                 required
               />
               <label htmlFor="terms">
-                I agree to the <Link to="/terms" className="text-blue-500 underline">terms and conditions</Link>
+                I agree to the{" "}
+                <Link to="/terms" className="text-blue-500 underline">
+                  terms and conditions
+                </Link>
               </label>
             </div>
           )}
 
           <button
-          disabled={currentState === "SignUp" && (!isPhoneValid || !terms)}
+            disabled={currentState === "SignUp" && (!isPhoneValid || !terms)}
             className="mt-2 w-full py-2 px-4 rounded-md text-white bg-black"
             type="submit"
           >
@@ -166,15 +180,22 @@ const Login = () => {
         </form>
         <div className="mt-4 text-center">
           {currentState === "Login" ? (
-            <p className="text-sm">
-              Don't have an account?{" "}
-              <span
-                className="text-blue-600 cursor-pointer"
-                onClick={() => setCurrentState("SignUp")}
-              >
-                Sign Up
-              </span>
-            </p>
+            <div className="text-sm space-y-2">
+              <p onClick={() => setShowResetPassword(true)} className="text-blue-600 cursor-pointer">
+              
+                  Forgot Password?
+              
+              </p>
+              <p>
+                Don't have an account?{" "}
+                <span
+                  className="text-blue-600 cursor-pointer"
+                  onClick={() => setCurrentState("SignUp")}
+                >
+                  Sign Up
+                </span>
+              </p>
+            </div>
           ) : (
             <p className="text-sm">
               Already have an account?{" "}
@@ -193,5 +214,3 @@ const Login = () => {
 };
 
 export default Login;
-
-

@@ -1,5 +1,4 @@
 import validator from "validator";
-import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import transporter from "../config/nodemailer.js";
@@ -70,7 +69,7 @@ const registerSeller = async (req, res) => {
 };
 
 //seller login api
-//TEST THE LOGIN API
+
 const sellerLogin = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
@@ -122,8 +121,8 @@ const sendVerifyOtp = async (req, res) => {
   try {
     const { userId } = req.body;
 
-    const seller = await userModel.findById(userId);
-    if (seller.isAccountVerified) {
+    const seller = await sellerModel.findById(userId);
+    if (seller.isEmailAccountVerified) {
       return res.json({ success: false, msg: "Account already verified." });
     }
 
@@ -148,6 +147,7 @@ const sendVerifyOtp = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   const { userId, otp } = req.body;
+
   if (!userId || !otp) {
     return res.json({ success: false, msg: "Missing Details" });
   }
@@ -156,13 +156,13 @@ const verifyEmail = async (req, res) => {
     if (!seller) {
       return res.json({ success: false, msg: "User not found" });
     }
-    if (seller.verifyOtp === "" || user.verifyOtp !== otp) {
+    if (seller.verifyOtp === "" || seller.verifyOtp !== otp) {
       return res.json({ success: false, msg: "Invalid Otp" });
     }
     if (seller.verifyExpireAt < Date.now()) {
       return res.json({ success: false, msg: "OTP expired" });
     }
-    seller.isAccountVerified = true;
+    seller.isEmailAccountVerified = true;
     seller.verifyOtp = "";
     seller.verifyOtpExpireAt = 0;
     await seller.save();
@@ -175,7 +175,11 @@ const verifyEmail = async (req, res) => {
 //check if seller is authenticated
 const isAuthenticated = async (req, res) => {
   try {
-    return res.json({ success: true , msg: "You're authenticated successfully "});
+    
+    return res.json({
+      success: true,
+      msg: "You're authenticated successfully ",
+    });
   } catch (error) {
     return res.json({ success: false, msg: error.message });
   }
@@ -189,7 +193,7 @@ const sendResetOtp = async (req, res) => {
   }
 
   try {
-    const seller = await userModel.findOne({ email });
+    const seller = await sellerModel.findOne({ email });
 
     if (!seller) {
       return res.json({ success: false, msg: "User not found" });
@@ -229,7 +233,7 @@ const resetPassword = async (req, res) => {
       return res.json({ success: false, msg: "User not found" });
     }
 
-    if (seller.resetOtp === "" || user.resetOtp !== otp) {
+    if (seller.resetOtp === "" || seller.resetOtp !== otp) {
       return res.json({ success: false, msg: "Invalid OTP" });
     }
     if (seller.resetOtpExpireAt < Date.now()) {
@@ -240,14 +244,28 @@ const resetPassword = async (req, res) => {
     seller.password = hashedPassword;
     seller.resetOtp = "";
     seller.resetOtpExpireAt = 0;
-    await user.save();
+    await seller.save();
 
     res.json({ success: true, msg: "Password has been reset successfully." });
   } catch (error) {
     return res.json({ success: false, msg: error.message });
   }
 };
+/*const getSeller = async (req, res) => {
+  try {
+  } catch (error) {
+    console.log(error);
+  }
+} */
 
+// const submitRequirements = async (req, res) => {
+//     try {
+//       const {}
+      
+//     } catch (error) {
+//       console.log(error.message)
+//     }
+// }
 export {
   registerSeller,
   sellerLogin,

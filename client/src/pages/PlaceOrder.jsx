@@ -19,10 +19,7 @@ const PlaceOrder = () => {
     zipcode: "",
     phone: "",
   });
-////
-///11:05:32
-///
-/////
+
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;

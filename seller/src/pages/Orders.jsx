@@ -4,7 +4,7 @@ import { backendUrl, currency } from "../App";
 import { toast } from "react-toastify";
 import { assets } from "../assets/seller_assets/assets";
 
-const Orders = ({ role }) => {
+const Orders = () => {
   const [orders, setOrders] = useState([]);
 
   const fetchAllOrders = async () => {

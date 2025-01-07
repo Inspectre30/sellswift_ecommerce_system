@@ -1,7 +1,10 @@
-import React from "react";
+import { toast } from "react-toastify";
 import { assets } from "../assets/seller_assets/assets";
-
+import axios from 'axios'
+import { useContext } from "react";
+import { SellerContext } from "../context/SellerContext";
 const Navbar = () => {
+  const {backendUrl, navigate, setAuth} = useContext(SellerContext)
 
   const logout = async () => {
     try {
@@ -10,6 +13,7 @@ const Navbar = () => {
 
       if(response.data.success) {
         navigate("/login");
+        setAuth(false)
       }else {
         toast.error(response.data.msg)
       }
